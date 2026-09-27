@@ -5,7 +5,7 @@ import {
 	SELF,
 } from "cloudflare:test";
 import { describe, it, expect } from "vitest";
-import worker from "../src/index";
+import worker, { chunkDocument } from "../src/index";
 
 const IncomingRequest = Request<unknown, IncomingRequestCfProperties>;
 
@@ -46,6 +46,38 @@ describe("RAG worker", () => {
 
 		expect(await response.json()).toEqual({
 			error: "Route not found",
+		});
+	});
+});
+
+describe("Document chunking", () => {
+	it("splits a document into overlapping chunks", () => {
+		const content = "A".repeat(2500);
+
+		const chunks = chunkDocument(
+			content,
+			1000,
+			200,
+		);
+
+		expect(chunks).toHaveLength(3);
+
+		expect(chunks[0]).toEqual({
+			content: "A".repeat(1000),
+			startChar: 0,
+			endChar: 1000,
+		});
+
+		expect(chunks[1]).toEqual({
+			content: "A".repeat(1000),
+			startChar: 800,
+			endChar: 1800,
+		});
+
+		expect(chunks[2]).toEqual({
+			content: "A".repeat(900),
+			startChar: 1600,
+			endChar: 2500,
 		});
 	});
 });

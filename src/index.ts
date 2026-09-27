@@ -17,6 +17,49 @@ const GENERATION_MODEL =
 const EMBEDDING_DIMENSIONS = 384;
 const MIN_SIMILARITY_SCORE = 0.60;
 
+type DocumentChunk = {
+	content: string;
+	startChar: number;
+	endChar: number;
+};
+
+export function chunkDocument(
+	content: string,
+	chunkSize = 1000,
+	overlap = 200,
+): DocumentChunk[] {
+	const chunks: DocumentChunk[] = [];
+
+	let start = 0;
+
+	while (start < content.length) {
+		const end = Math.min(
+			start + chunkSize,
+			content.length,
+		);
+
+		const chunkContent = content
+			.slice(start, end)
+			.trim();
+
+		if (chunkContent) {
+			chunks.push({
+				content: chunkContent,
+				startChar: start,
+				endChar: end,
+			});
+		}
+
+		if (end === content.length) {
+			break;
+		}
+
+		start += chunkSize - overlap;
+	}
+
+	return chunks;
+}
+
 export default {
     async fetch(request, env, ctx): Promise<Response> {
         const url = new URL(request.url);
@@ -330,80 +373,118 @@ ${query}`
                 )
                     .bind(id, content, source)
                     .run();
+                // Split the complete document into overlapping chunks.
+const chunks = chunkDocument(content);
 
-                // Temporarily embed the first 1,500 characters.
-                const textForEmbedding =
-                    content.slice(0, 1500);
+// Find vectors from the previous version of this document.
+const oldChunkRows = await env.DB.prepare(
+    "SELECT id FROM document_chunks WHERE document_id = ?",
+)
+    .bind(id)
+    .all<{ id: string }>();
 
-                const embeddingResult =
-                    await env.AI.run(
-                        EMBEDDING_MODEL,
-                        {
-                            text: [textForEmbedding],
-                            pooling: "cls"
-                        }
-                    );
+const oldVectorIds = [
+    id, // Legacy document-level vector from the old ingestion design.
+    ...oldChunkRows.results.map((row) => row.id),
+];
 
-                const vector =
-                    embeddingResult.data[0];
+// Remove old vectors so stale content cannot be retrieved.
+await env.VECTORIZE.deleteByIds(oldVectorIds);
 
-                if (
-                    !vector ||
-                    vector.length !==
-                        EMBEDDING_DIMENSIONS
-                ) {
-                    return Response.json(
-                        {
-                            error:
-                                "A valid 384-dimensional embedding was not generated."
-                        },
-                        { status: 500 }
-                    );
+// Remove old D1 chunks before saving the new version.
+await env.DB.prepare(
+    "DELETE FROM document_chunks WHERE document_id = ?",
+)
+    .bind(id)
+    .run();
+
+                // Save each chunk in D1 with its position in the source document.
+                for (let index = 0; index < chunks.length; index++) {
+                    const chunk = chunks[index];
+                    const chunkId = `${id}-chunk-${index}`;
+
+                    await env.DB.prepare(
+                        `INSERT INTO document_chunks
+                            (id, document_id, chunk_index, content, start_char, end_char)
+                        VALUES (?, ?, ?, ?, ?, ?)`,
+                    )
+                        .bind(
+                            chunkId,
+                            id,
+                            index,
+                            chunk.content,
+                            chunk.startChar,
+                            chunk.endChar,
+                        )
+                        .run();
                 }
 
-                // Store embedding and metadata in Vectorize.
-                await env.VECTORIZE.upsert([
+                // Generate one embedding for each document chunk.
+                const textsForEmbedding = chunks.map(
+                    (chunk) => chunk.content,
+                );
+
+                const embeddingResult = await env.AI.run(
+                    EMBEDDING_MODEL,
                     {
-                        id,
+                        text: textsForEmbedding,
+                        pooling: "cls",
+                    },
+                );
+
+                // Build one Vectorize record for each chunk.
+                const vectors = chunks.map((chunk, index) => {
+                    const vector = embeddingResult.data[index];
+
+                    if (
+                        !vector ||
+                        vector.length !== EMBEDDING_DIMENSIONS
+                    ) {
+                        throw new Error(
+                            `A valid embedding was not generated for chunk ${index}.`,
+                        );
+                    }
+
+                    return {
+                        id: `${id}-chunk-${index}`,
                         values: vector,
                         metadata: {
-                            content:
-                                content.slice(
-                                    0,
-                                    1000
-                                ),
+                            document_id: id,
+                            chunk_index: index,
+                            content: chunk.content,
                             source,
-                            doc_type: "raw"
-                        }
-                    }
-                ]);
+                            doc_type: "chunk",
+                            start_char: chunk.startChar,
+                            end_char: chunk.endChar,
+                        },
+                    };
+                });
+
+                // Store all chunk embeddings in Vectorize.
+                await env.VECTORIZE.upsert(vectors);
 
                 return Response.json({
                     success: true,
-                    stage:
-                        "saved_to_d1_and_vectorize",
-
+                    stage: "saved_to_d1_and_vectorize",
                     document: {
                         id,
                         source,
-                        content_length:
-                            content.length
+                        content_length: content.length,
                     },
-
                     embedding: {
                         model: EMBEDDING_MODEL,
-                        dimensions: vector.length
-                    }
+                        dimensions: EMBEDDING_DIMENSIONS,
+                        chunks: chunks.length,
+                    },
                 });
             } catch (error) {
                 return Response.json(
                     {
-                        error:
-                            "The document could not be ingested.",
+                        error: "The document could not be ingested.",
                         details:
                             error instanceof Error
                                 ? error.message
-                                : String(error)
+                                : String(error),
                     },
                     { status: 500 }
                 );

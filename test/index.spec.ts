@@ -8,6 +8,8 @@ import { describe, it, expect } from "vitest";
 import worker, {
     chunkDocument,
     reciprocalRankFusion,
+	extractCitationNumbers,
+	validateCitationNumbers,
 } from "../src/index";
 
 const IncomingRequest = Request<unknown, IncomingRequestCfProperties>;
@@ -150,5 +152,32 @@ describe("Reciprocal Rank Fusion", () => {
                 (result) => result.id === "chunk-D",
             )?.rrfScore ?? 0,
         );
+    });
+});
+
+describe("Citation extraction", () => {
+    it("extracts unique source numbers from an answer", () => {
+        const answer =
+            "RAG uses retrieved context [Source 1]. " +
+            "Another claim is supported by [Source 2, Source 3]. " +
+            "Source 1 also supports this statement.";
+
+        expect(
+            extractCitationNumbers(answer)
+        ).toEqual([1, 2, 3]);
+    });
+});
+
+describe("Citation validation", () => {
+    it("removes citations that do not correspond to retrieved sources", () => {
+        const citationNumbers = [1, 3, 8];
+
+        const validCitations =
+            validateCitationNumbers(
+                citationNumbers,
+                5,
+            );
+
+        expect(validCitations).toEqual([1, 3]);
     });
 });

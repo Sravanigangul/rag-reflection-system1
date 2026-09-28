@@ -5,7 +5,10 @@ import {
 	SELF,
 } from "cloudflare:test";
 import { describe, it, expect } from "vitest";
-import worker, { chunkDocument } from "../src/index";
+import worker, {
+    chunkDocument,
+    reciprocalRankFusion,
+} from "../src/index";
 
 const IncomingRequest = Request<unknown, IncomingRequestCfProperties>;
 
@@ -114,4 +117,38 @@ it("prefers natural sentence boundaries", () => {
             chunk.content.endsWith("."),
         ),
     ).toBe(true);
+});
+
+describe("Reciprocal Rank Fusion", () => {
+    it("rewards results that rank highly in both retrievers", () => {
+        const semanticResults = [
+            { id: "chunk-C" },
+            { id: "chunk-A" },
+            { id: "chunk-D" },
+        ];
+
+        const lexicalResults = [
+            { id: "chunk-A" },
+            { id: "chunk-C" },
+            { id: "chunk-B" },
+        ];
+
+        const fused = reciprocalRankFusion(
+            semanticResults,
+            lexicalResults,
+        );
+
+        expect(fused[0].id).toBe("chunk-C");
+        expect(fused[1].id).toBe("chunk-A");
+
+        expect(
+            fused.find(
+                (result) => result.id === "chunk-C",
+            )?.rrfScore,
+        ).toBeGreaterThan(
+            fused.find(
+                (result) => result.id === "chunk-D",
+            )?.rrfScore ?? 0,
+        );
+    });
 });

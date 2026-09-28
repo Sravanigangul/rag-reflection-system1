@@ -138,6 +138,59 @@ export function chunkDocument(
     return chunks;
 }
 
+type RankedResult = {
+    id: string;
+};
+
+type FusedResult = {
+    id: string;
+    rrfScore: number;
+};
+
+export function reciprocalRankFusion(
+    semanticResults: RankedResult[],
+    lexicalResults: RankedResult[],
+    k = 60,
+): FusedResult[] {
+    const scores = new Map<string, number>();
+
+    const addRanking = (results: RankedResult[]) => {
+        results.forEach((result, index) => {
+            const rank = index + 1;
+            const currentScore =
+                scores.get(result.id) ?? 0;
+
+            scores.set(
+                result.id,
+                currentScore + 1 / (k + rank),
+            );
+        });
+    };
+
+    addRanking(semanticResults);
+    addRanking(lexicalResults);
+
+    return Array.from(scores.entries())
+        .map(([id, rrfScore]) => ({
+            id,
+            rrfScore,
+        }))
+        .sort(
+            (a, b) =>
+                b.rrfScore - a.rrfScore,
+        );
+}
+export function buildFtsQuery(query: string): string {
+    return query
+        .toLowerCase()
+        .split(/\s+/)
+        .map((term) =>
+            term.replace(/[^\p{L}\p{N}_-]/gu, "")
+        )
+        .filter((term) => term.length > 0)
+        .map((term) => `"${term}"`)
+        .join(" OR ");
+}
 export default {
     async fetch(request, env, ctx): Promise<Response> {
         const url = new URL(request.url);
@@ -223,6 +276,33 @@ export default {
                             returnMetadata: "all"
                         }
                     );
+                const ftsQuery = buildFtsQuery(query);
+                // Retrieve keyword matches from D1 FTS5.
+                const lexicalResult = await env.DB
+                    .prepare(
+                        `
+                        SELECT
+                            chunk_id AS id,
+                            document_id,
+                            content,
+                            source,
+                            bm25(document_chunks_fts) AS lexical_score
+                        FROM document_chunks_fts
+                        WHERE document_chunks_fts MATCH ?
+                        ORDER BY lexical_score
+                        LIMIT 5
+                        `
+                    )
+                    .bind(ftsQuery)
+                    .all<{
+                        id: string;
+                        document_id: string;
+                        content: string;
+                        source: string | null;
+                        lexical_score: number;
+                    }>();
+
+                const lexicalMatches = lexicalResult.results;
 
                 // Remove results below the similarity threshold.
                 const matches =
@@ -254,9 +334,57 @@ export default {
                                     ? match.metadata.doc_type
                                     : null
                         }));
+                // Fuse semantic and lexical rankings.
+                const fusedResults = reciprocalRankFusion(
+                    matches.map((match) => ({
+                        id: match.id,
+                        })),
+                    lexicalMatches.map((match) => ({
+                        id: match.id,
+                        })),
+                    );
+
+                const topFusedResults = fusedResults.slice(0, 5);
+
+                // Retrieve authoritative chunk content from D1
+                // in the order determined by hybrid retrieval.
+                const fusedMatches = [];
+
+                for (const fusedResult of topFusedResults) {
+                    const chunk = await env.DB
+                        .prepare(
+                            `
+                            SELECT
+                                document_chunks.id,
+                                document_chunks.content,
+                                documents.source
+                            FROM document_chunks
+                            JOIN documents
+                                ON documents.id =
+                                document_chunks.document_id
+                            WHERE document_chunks.id = ?
+                            `
+                        )
+                        .bind(fusedResult.id)
+                        .first<{
+                            id: string;
+                            content: string;
+                            source: string | null;
+                        }>();
+
+                    if (chunk) {
+                        fusedMatches.push({
+                            id: chunk.id,
+                            score: fusedResult.rrfScore,
+                            content: chunk.content,
+                            source: chunk.source,
+                            doc_type: "chunk",
+                        });
+                    }
+                }
 
                 // Do not call the LLM if nothing relevant was found.
-                if (matches.length === 0) {
+                if (fusedMatches.length === 0) {
                     return Response.json({
                         query,
                         answer:
@@ -266,7 +394,7 @@ export default {
                 }
 
                 // Combine retrieved documents into LLM context.
-                const context = matches
+                const context = fusedMatches
                     .filter(
                         (match) =>
                             match.content !== null
@@ -341,7 +469,7 @@ ${query}`
                     query,
                     answer,
 
-                    sources: matches.map(
+                    sources: fusedMatches.map(
                         (match) => ({
                             id: match.id,
                             source: match.source,
@@ -633,3 +761,4 @@ await env.DB.prepare(
         );
     },
 } satisfies ExportedHandler<Env>;
+

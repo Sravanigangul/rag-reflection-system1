@@ -24,40 +24,118 @@ type DocumentChunk = {
 };
 
 export function chunkDocument(
-	content: string,
-	chunkSize = 1000,
-	overlap = 200,
+    content: string,
+    chunkSize = 1000,
+    overlap = 200,
 ): DocumentChunk[] {
-	const chunks: DocumentChunk[] = [];
+    if (chunkSize <= 0) {
+        throw new Error("chunkSize must be greater than 0.");
+    }
 
-	let start = 0;
+    if (overlap < 0 || overlap >= chunkSize) {
+        throw new Error(
+            "overlap must be at least 0 and smaller than chunkSize.",
+        );
+    }
 
-	while (start < content.length) {
-		const end = Math.min(
-			start + chunkSize,
-			content.length,
-		);
+    const chunks: DocumentChunk[] = [];
+    let start = 0;
 
-		const chunkContent = content
-			.slice(start, end)
-			.trim();
+    while (start < content.length) {
+        const maxEnd = Math.min(
+            start + chunkSize,
+            content.length,
+        );
 
-		if (chunkContent) {
-			chunks.push({
-				content: chunkContent,
-				startChar: start,
-				endChar: end,
-			});
-		}
+        let end = maxEnd;
 
-		if (end === content.length) {
-			break;
-		}
+        // If more text remains, prefer a natural boundary.
+        if (maxEnd < content.length) {
+            const candidate = content.slice(start, maxEnd);
 
-		start += chunkSize - overlap;
-	}
+            const sentenceEnd = Math.max(
+                candidate.lastIndexOf(". "),
+                candidate.lastIndexOf("? "),
+                candidate.lastIndexOf("! "),
+                candidate.lastIndexOf("\n"),
+            );
 
-	return chunks;
+            if (sentenceEnd >= chunkSize * 0.5) {
+                end = start + sentenceEnd + 1;
+            } else {
+                const lastSpace = candidate.lastIndexOf(" ");
+
+                if (lastSpace >= chunkSize * 0.5) {
+                    end = start + lastSpace;
+                }
+            }
+        }
+
+        const chunkContent = content
+            .slice(start, end)
+            .trim();
+
+        if (chunkContent) {
+            chunks.push({
+                content: chunkContent,
+                startChar: start,
+                endChar: end,
+            });
+        }
+
+        if (end >= content.length) {
+            break;
+        }
+
+        // Move backward to preserve approximate overlap.
+        const nextTarget = Math.max(
+            end - overlap,
+            start + 1,
+        );
+
+        // Prefer starting the next chunk at a sentence boundary.
+        const overlapText = content.slice(
+            nextTarget,
+            end,
+        );
+
+        const sentenceStarts = [
+            overlapText.indexOf(". "),
+            overlapText.indexOf("? "),
+            overlapText.indexOf("! "),
+            overlapText.indexOf("\n"),
+        ].filter((position) => position !== -1);
+
+        if (sentenceStarts.length > 0) {
+            const firstSentenceBoundary = Math.min(
+                ...sentenceStarts,
+            );
+
+            start =
+                nextTarget +
+                firstSentenceBoundary +
+                (overlapText[firstSentenceBoundary] === "\n"
+                    ? 1
+                    : 2);
+        } else {
+            // Fall back to a word boundary.
+            const nextSpace = content.indexOf(
+                " ",
+                nextTarget,
+            );
+
+            if (
+                nextSpace !== -1 &&
+                nextSpace < end
+            ) {
+                start = nextSpace + 1;
+            } else {
+                start = nextTarget;
+            }
+        }
+    }
+
+    return chunks;
 }
 
 export default {

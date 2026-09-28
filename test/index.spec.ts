@@ -81,3 +81,37 @@ describe("Document chunking", () => {
 		});
 	});
 });
+
+it("prefers natural sentence boundaries", () => {
+    const text =
+        "The patient has hypertension. " +
+        "Metformin was prescribed for diabetes. " +
+        "Blood pressure improved after treatment. " +
+        "Follow-up was scheduled for next month.";
+
+    const chunks = chunkDocument(
+        text,
+        80,
+        20,
+    );
+
+    expect(chunks.length).toBeGreaterThan(1);
+
+    for (const chunk of chunks) {
+        expect(chunk.content.length).toBeLessThanOrEqual(80);
+
+        expect(
+            chunk.content.startsWith(" "),
+        ).toBe(false);
+
+        expect(
+            chunk.content.endsWith(" "),
+        ).toBe(false);
+    }
+
+    expect(
+        chunks.some((chunk) =>
+            chunk.content.endsWith("."),
+        ),
+    ).toBe(true);
+});

@@ -10,7 +10,9 @@ import worker, {
     reciprocalRankFusion,
 	extractCitationNumbers,
 	validateCitationNumbers,
+    parseReflectionResult,
 } from "../src/index";
+
 
 const IncomingRequest = Request<unknown, IncomingRequestCfProperties>;
 
@@ -180,4 +182,33 @@ describe("Citation validation", () => {
 
         expect(validCitations).toEqual([1, 3]);
     });
+});
+
+describe("Reflection parsing", () => {
+    it("parses a valid reflection response", () => {
+        const response = `{
+            "supported": true,
+            "issues": [],
+            "revisedAnswer": "The answer is supported. [Source 1]"
+        }`;
+
+        const result =
+            parseReflectionResult(response);
+
+        expect(result).toEqual({
+            supported: true,
+            issues: [],
+            revisedAnswer:
+                "The answer is supported. [Source 1]",
+        });
+    });
+});
+it("returns null for malformed reflection output", () => {
+    const response =
+        "The answer looks correct to me.";
+
+    const result =
+        parseReflectionResult(response);
+
+    expect(result).toBeNull();
 });

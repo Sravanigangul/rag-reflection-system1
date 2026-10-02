@@ -4,6 +4,26 @@ type IngestBody = {
     source?: unknown;
 };
 
+type OptnChunkMetadata = {
+    policyNumber: string;
+    policyTitle: string;
+    sectionNumber: string;
+    sectionTitle: string;
+    sectionType: string;
+    chunkIndex: number;
+    source: string;
+};
+
+type OptnChunk = {
+    id: string;
+    text: string;
+    metadata: OptnChunkMetadata;
+};
+
+type IngestChunksBody = {
+    chunks?: unknown;
+};
+
 type SearchBody = {
     query?: unknown;
 };
@@ -14,20 +34,35 @@ type ReflectionResult = {
     revisedAnswer: string;
 };
 
-const EMBEDDING_MODEL =
-    "@cf/baai/bge-small-en-v1.5" as const;
-
-const GENERATION_MODEL =
-    "@cf/google/gemma-4-26b-a4b-it" as const;
-
+const EMBEDDING_MODEL = "@cf/baai/bge-small-en-v1.5" as const;
+const GENERATION_MODEL = "@cf/google/gemma-4-26b-a4b-it" as const;
 const EMBEDDING_DIMENSIONS = 384;
 const MIN_SIMILARITY_SCORE = 0.60;
 
 type DocumentChunk = {
-	content: string;
-	startChar: number;
-	endChar: number;
+    content: string;
+    startChar: number;
+    endChar: number;
 };
+
+function getEmbeddingVector(
+    result: any,
+    index: number,
+): number[] | undefined {
+    const payload =
+        result?.data ??
+        result?.result ??
+        result?.embeddings ??
+        result?.[0];
+
+    if (!Array.isArray(payload)) {
+        return undefined;
+    }
+
+    const vector = payload[index];
+
+    return Array.isArray(vector) ? vector : undefined;
+}
 
 export function chunkDocument(
     content: string,
@@ -55,7 +90,6 @@ export function chunkDocument(
 
         let end = maxEnd;
 
-        // If more text remains, prefer a natural boundary.
         if (maxEnd < content.length) {
             const candidate = content.slice(start, maxEnd);
 
@@ -93,13 +127,11 @@ export function chunkDocument(
             break;
         }
 
-        // Move backward to preserve approximate overlap.
         const nextTarget = Math.max(
             end - overlap,
             start + 1,
         );
 
-        // Prefer starting the next chunk at a sentence boundary.
         const overlapText = content.slice(
             nextTarget,
             end,
@@ -124,7 +156,6 @@ export function chunkDocument(
                     ? 1
                     : 2);
         } else {
-            // Fall back to a word boundary.
             const nextSpace = content.indexOf(
                 " ",
                 nextTarget,
@@ -186,12 +217,13 @@ export function reciprocalRankFusion(
                 b.rrfScore - a.rrfScore,
         );
 }
+
 export function buildFtsQuery(query: string): string {
     return query
         .toLowerCase()
         .split(/\s+/)
         .map((term) =>
-            term.replace(/[^\p{L}\p{N}_-]/gu, "")
+            term.replace(/[^\p{L}\p{N}_-]/gu, ""),
         )
         .filter((term) => term.length > 0)
         .map((term) => `"${term}"`)
@@ -235,14 +267,17 @@ export function buildReflectionPrompt(
 You are verifying whether an answer is supported by retrieved evidence.
 
 Retrieved evidence:
+
 ${context}
 
 Draft answer:
+
 ${answer}
 
 Evaluate the draft answer using only the retrieved evidence.
 
 Return valid JSON with exactly this structure:
+
 {
   "supported": true,
   "issues": [],
@@ -265,7 +300,6 @@ export function parseReflectionResult(
     text: string,
 ): ReflectionResult | null {
     try {
-        // Models sometimes wrap JSON in ```json ... ```
         const cleaned = text
             .replace(/```json/gi, "")
             .replace(/```/g, "")
@@ -299,89 +333,81 @@ export default {
     async fetch(request, env, ctx): Promise<Response> {
         const url = new URL(request.url);
 
-        // 1. Home route
         if (url.pathname === "/") {
             return Response.json({
                 message: "My RAG application is running",
-                status: "ready"
+                status: "ready",
             });
         }
 
-        // 2. Semantic search and answer generation
         if (
             url.pathname === "/search" &&
             request.method === "POST"
         ) {
             let body: SearchBody;
 
-            // Read the JSON request.
             try {
                 body = await request.json<SearchBody>();
             } catch {
                 return Response.json(
                     {
-                        error:
-                            "The request body must be valid JSON."
+                        error: "The request body must be valid JSON.",
                     },
-                    { status: 400 }
+                    { status: 400 },
                 );
             }
 
-            // Validate the question.
             if (
                 typeof body.query !== "string" ||
                 !body.query.trim()
             ) {
                 return Response.json(
                     {
-                        error:
-                            "Please provide a non-empty query."
+                        error: "Please provide a non-empty query.",
                     },
-                    { status: 400 }
+                    { status: 400 },
                 );
             }
 
             const query = body.query.trim();
 
             try {
-                // Convert the question into an embedding.
                 const embeddingResult =
                     await env.AI.run(
                         EMBEDDING_MODEL,
                         {
                             text: [query],
-                            pooling: "cls"
-                        }
+                            pooling: "cls",
+                        },
                     );
 
                 const queryVector =
-                    embeddingResult.data[0];
+                    getEmbeddingVector(embeddingResult, 0);
 
                 if (
                     !queryVector ||
-                    queryVector.length !==
-                        EMBEDDING_DIMENSIONS
+                    queryVector.length !== EMBEDDING_DIMENSIONS
                 ) {
                     return Response.json(
                         {
                             error:
-                                "A valid query embedding was not generated."
+                                "A valid query embedding was not generated.",
                         },
-                        { status: 500 }
+                        { status: 500 },
                     );
                 }
 
-                // Retrieve the five closest candidates.
                 const searchResults =
                     await env.VECTORIZE.query(
                         queryVector,
                         {
                             topK: 5,
-                            returnMetadata: "all"
-                        }
+                            returnMetadata: "all",
+                        },
                     );
+
                 const ftsQuery = buildFtsQuery(query);
-                // Retrieve keyword matches from D1 FTS5.
+
                 const lexicalResult = await env.DB
                     .prepare(
                         `
@@ -395,7 +421,7 @@ export default {
                         WHERE document_chunks_fts MATCH ?
                         ORDER BY lexical_score
                         LIMIT 5
-                        `
+                        `,
                     )
                     .bind(ftsQuery)
                     .all<{
@@ -408,13 +434,12 @@ export default {
 
                 const lexicalMatches = lexicalResult.results;
 
-                // Remove results below the similarity threshold.
                 const matches =
                     searchResults.matches
                         .filter(
                             (match) =>
                                 match.score >=
-                                MIN_SIMILARITY_SCORE
+                                MIN_SIMILARITY_SCORE,
                         )
                         .map((match) => ({
                             id: match.id,
@@ -436,22 +461,20 @@ export default {
                                 typeof match.metadata
                                     ?.doc_type === "string"
                                     ? match.metadata.doc_type
-                                    : null
+                                    : null,
                         }));
-                // Fuse semantic and lexical rankings.
+
                 const fusedResults = reciprocalRankFusion(
                     matches.map((match) => ({
                         id: match.id,
-                        })),
+                    })),
                     lexicalMatches.map((match) => ({
                         id: match.id,
-                        })),
-                    );
+                    })),
+                );
 
                 const topFusedResults = fusedResults.slice(0, 5);
 
-                // Retrieve authoritative chunk content from D1
-                // in the order determined by hybrid retrieval.
                 const fusedMatches: Array<{
                     id: string;
                     score: number;
@@ -473,7 +496,7 @@ export default {
                                 ON documents.id =
                                 document_chunks.document_id
                             WHERE document_chunks.id = ?
-                            `
+                            `,
                         )
                         .bind(fusedResult.id)
                         .first<{
@@ -493,26 +516,22 @@ export default {
                     }
                 }
 
-                // Do not call the LLM if nothing relevant was found.
                 if (fusedMatches.length === 0) {
                     return Response.json({
                         query,
                         answer:
                             "I do not have enough information in the supplied documents to answer this question.",
-                        sources: []
+                        sources: [],
                     });
                 }
 
-                // Combine retrieved documents into LLM context.
                 const context = fusedMatches
-                    .filter(
-                        (match) =>
-                            match.content !== null
-                    )
+                    .filter((match) => match.content !== null)
                     .map(
                         (match, index) =>
                             `[Source ${index + 1}: ${match.id}]
-${match.content}`
+
+${match.content}`,
                     )
                     .join("\n\n");
 
@@ -521,11 +540,10 @@ ${match.content}`
                         query,
                         answer:
                             "I do not have enough readable context to answer this question.",
-                        sources: []
+                        sources: [],
                     });
                 }
 
-                // Generate an answer using only retrieved context.
                 const generationResult =
                     await env.AI.run(
                         GENERATION_MODEL,
@@ -533,35 +551,34 @@ ${match.content}`
                             messages: [
                                 {
                                     role: "system",
-                    
                                     content:
-                                    "Answer only from the supplied context. Cite each factual claim using the minimum number of supporting citations in the format [Source N]. Prefer the single most relevant source when one source is sufficient. Use multiple citations only when multiple sources are genuinely needed to support the claim. Never cite all retrieved sources by default. If the context does not contain enough information, say that you do not have enough information. Do not invent facts."
-                                    },
+                                        "Answer only from the supplied context. Cite each factual claim using the minimum number of supporting citations in the format [Source N]. Prefer the single most relevant source when one source is sufficient. Use multiple citations only when multiple sources are genuinely needed to support the claim. Never cite all retrieved sources by default. If the context does not contain enough information, say that you do not have enough information. Do not invent facts.",
+                                },
                                 {
                                     role: "user",
                                     content: `Context:
+
 ${context}
 
 Question:
-${query}`
-                                }
+
+${query}`,
+                                },
                             ],
                             temperature: 0.2,
-                            max_completion_tokens: 200,
+                            max_tokens: 1000,
                             chat_template_kwargs: {
-                                enable_thinking: false
-                            }
-                        }
+                                enable_thinking: false,
+                            },
+                        },
                     );
 
-                // Extract only the generated answer.
                 const generatedContent =
                     generationResult.choices?.[0]
                         ?.message?.content;
 
                 const answer =
-                    typeof generatedContent ===
-                    "string"
+                    typeof generatedContent === "string"
                         ? generatedContent.trim()
                         : "";
 
@@ -569,18 +586,17 @@ ${query}`
                     return Response.json(
                         {
                             error:
-                                "The model did not generate an answer."
+                                "The model did not generate an answer.",
                         },
-                        { status: 500 }
+                        { status: 500 },
                     );
                 }
-                // Build the verification prompt for the draft answer.
+
                 const reflectionPrompt = buildReflectionPrompt(
                     answer,
                     context,
                 );
 
-                // Ask the model to verify the answer against the evidence.
                 const reflectionResponse = await env.AI.run(
                     GENERATION_MODEL,
                     {
@@ -591,54 +607,51 @@ ${query}`
                             },
                         ],
                         temperature: 0,
-                        max_completion_tokens: 300,
+                        max_tokens: 1000,
                         chat_template_kwargs: {
                             enable_thinking: false,
                         },
-                    }
+                    },
                 );
-                // Extract the reflector's generated text.
+
                 const reflectionContent =
                     reflectionResponse.choices?.[0]
                         ?.message?.content;
 
-                // Parse the reflector's JSON safely.
                 const reflection =
                     typeof reflectionContent === "string"
                         ? parseReflectionResult(
                             reflectionContent,
                         )
                         : null;
-                // Use the reflector's revised answer when available.
+
                 const finalAnswer =
                     reflection?.revisedAnswer.trim()
                         ? reflection.revisedAnswer.trim()
                         : answer;
 
-                // Extract and validate citations generated by the model.
-            const extractedCitations =
-                extractCitationNumbers(finalAnswer);
+                const extractedCitations =
+                    extractCitationNumbers(finalAnswer);
 
-            const validCitationNumbers =
-                validateCitationNumbers(
-                    extractedCitations,
-                    fusedMatches.length,
+                const validCitationNumbers =
+                    validateCitationNumbers(
+                        extractedCitations,
+                        fusedMatches.length,
+                    );
+
+                const citations = validCitationNumbers.map(
+                    (sourceNumber) => {
+                        const match =
+                            fusedMatches[sourceNumber - 1];
+
+                        return {
+                            sourceNumber,
+                            id: match.id,
+                            source: match.source,
+                        };
+                    },
                 );
 
-            const citations = validCitationNumbers.map(
-                (sourceNumber) => {
-                    const match =
-                        fusedMatches[sourceNumber - 1];
-
-                    return {
-                        sourceNumber,
-                        id: match.id,
-                        source: match.source,
-                    };
-                }
-            );
-
-                // Return a clean API response.
                 return Response.json({
                     query,
                     answer: finalAnswer,
@@ -649,12 +662,11 @@ ${query}`
                             id: match.id,
                             source: match.source,
                             score: match.score,
-                            content: match.content
-                        })
+                            content: match.content,
+                        }),
                     ),
-
                     model: GENERATION_MODEL,
-                    usage: generationResult.usage
+                    usage: generationResult.usage,
                 });
             } catch (error) {
                 return Response.json(
@@ -664,35 +676,194 @@ ${query}`
                         details:
                             error instanceof Error
                                 ? error.message
-                                : String(error)
+                                : String(error),
                     },
-                    { status: 500 }
+                    { status: 500 },
                 );
             }
         }
 
-        // 3. Document ingestion
+        if (
+            url.pathname === "/ingest-chunks" &&
+            request.method === "POST"
+        ) {
+            let body: IngestChunksBody;
+
+            try {
+                body = await request.json<IngestChunksBody>();
+            } catch {
+                return Response.json(
+                    { error: "The request body must be valid JSON." },
+                    { status: 400 },
+                );
+            }
+
+            if (!Array.isArray(body.chunks) || body.chunks.length === 0) {
+                return Response.json(
+                    { error: "Please provide a non-empty chunks array." },
+                    { status: 400 },
+                );
+            }
+
+            const chunks = body.chunks as OptnChunk[];
+
+            for (const chunk of chunks) {
+                if (
+                    typeof chunk.id !== "string" ||
+                    !chunk.id.trim() ||
+                    typeof chunk.text !== "string" ||
+                    !chunk.text.trim() ||
+                    !chunk.metadata ||
+                    typeof chunk.metadata.policyNumber !== "string" ||
+                    typeof chunk.metadata.policyTitle !== "string" ||
+                    typeof chunk.metadata.sectionNumber !== "string" ||
+                    typeof chunk.metadata.sectionTitle !== "string" ||
+                    typeof chunk.metadata.sectionType !== "string" ||
+                    typeof chunk.metadata.chunkIndex !== "number" ||
+                    typeof chunk.metadata.source !== "string"
+                ) {
+                    return Response.json(
+                        { error: "One or more OPTN chunks are invalid." },
+                        { status: 400 },
+                    );
+                }
+            }
+
+            try {
+                const textsForEmbedding = chunks.map(
+                    (chunk) => chunk.text,
+                );
+
+                const embeddingResult = await env.AI.run(
+                    EMBEDDING_MODEL,
+                    {
+                        text: textsForEmbedding,
+                        pooling: "cls",
+                    },
+                );
+
+                const vectors = chunks.map((chunk, index) => {
+                    const vector = getEmbeddingVector(
+                        embeddingResult,
+                        index,
+                    );
+
+                    if (
+                        !vector ||
+                        vector.length !== EMBEDDING_DIMENSIONS
+                    ) {
+                        throw new Error(
+                            `A valid embedding was not generated for ${chunk.id}.`,
+                        );
+                    }
+
+                    return {
+                        id: chunk.id,
+                        values: vector,
+                        metadata: {
+                            document_id: "optn-policies",
+                            policyNumber: chunk.metadata.policyNumber,
+                            policyTitle: chunk.metadata.policyTitle,
+                            sectionNumber: chunk.metadata.sectionNumber,
+                            sectionTitle: chunk.metadata.sectionTitle,
+                            sectionType: chunk.metadata.sectionType,
+                            chunkIndex: chunk.metadata.chunkIndex,
+                            source: chunk.metadata.source,
+                            doc_type: "optn_policy_chunk",
+                        },
+                    };
+                });
+
+                await env.DB.prepare(
+                    `INSERT INTO documents
+                        (id, content, source)
+                     VALUES (?, ?, ?)
+                     ON CONFLICT(id) DO UPDATE SET
+                        source = excluded.source`,
+                )
+                    .bind(
+                        "optn-policies",
+                        "OPTN Policies",
+                        "OPTN Policies",
+                    )
+                    .run();
+
+                for (let index = 0; index < chunks.length; index++) {
+                    const chunk = chunks[index];
+
+                    await env.DB.prepare(
+                        `INSERT INTO document_chunks
+                            (
+                                id,
+                                document_id,
+                                chunk_index,
+                                content,
+                                start_char,
+                                end_char
+                            )
+                         VALUES (?, ?, ?, ?, ?, ?)
+                         ON CONFLICT(id) DO UPDATE SET
+                            document_id = excluded.document_id,
+                            chunk_index = excluded.chunk_index,
+                            content = excluded.content,
+                            start_char = excluded.start_char,
+                            end_char = excluded.end_char`,
+                    )
+                        .bind(
+                            chunk.id,
+                            "optn-policies",
+                            chunk.metadata.chunkIndex,
+                            chunk.text,
+                            0,
+                            chunk.text.length,
+                        )
+                        .run();
+                }
+
+                await env.VECTORIZE.upsert(vectors);
+
+                return Response.json({
+                    success: true,
+                    stage: "optn_chunks_ingested",
+                    chunks_received: chunks.length,
+                    vectors_upserted: vectors.length,
+                    embedding: {
+                        model: EMBEDDING_MODEL,
+                        dimensions: EMBEDDING_DIMENSIONS,
+                    },
+                });
+            } catch (error) {
+                return Response.json(
+                    {
+                        error: "OPTN chunk ingestion failed.",
+                        details:
+                            error instanceof Error
+                                ? error.message
+                                : String(error),
+                    },
+                    { status: 500 },
+                );
+            }
+        }
+
         if (
             url.pathname === "/ingest" &&
             request.method === "POST"
         ) {
             let body: IngestBody;
 
-            // Read the JSON request.
             try {
-                body =
-                    await request.json<IngestBody>();
+                body = await request.json<IngestBody>();
             } catch {
                 return Response.json(
                     {
                         error:
-                            "The request body must be valid JSON."
+                            "The request body must be valid JSON.",
                     },
-                    { status: 400 }
+                    { status: 400 },
                 );
             }
 
-            // Validate the document ID.
             if (
                 typeof body.id !== "string" ||
                 !body.id.trim()
@@ -700,13 +871,12 @@ ${query}`
                 return Response.json(
                     {
                         error:
-                            "Please provide a non-empty document id."
+                            "Please provide a non-empty document id.",
                     },
-                    { status: 400 }
+                    { status: 400 },
                 );
             }
 
-            // Validate the document content.
             if (
                 typeof body.content !== "string" ||
                 !body.content.trim()
@@ -714,13 +884,12 @@ ${query}`
                 return Response.json(
                     {
                         error:
-                            "Please provide non-empty document content."
+                            "Please provide non-empty document content.",
                     },
-                    { status: 400 }
+                    { status: 400 },
                 );
             }
 
-            // Validate the optional source.
             if (
                 body.source !== undefined &&
                 typeof body.source !== "string"
@@ -728,9 +897,9 @@ ${query}`
                 return Response.json(
                     {
                         error:
-                            "Source must be a string."
+                            "Source must be a string.",
                     },
-                    { status: 400 }
+                    { status: 400 },
                 );
             }
 
@@ -743,43 +912,38 @@ ${query}`
                     : "";
 
             try {
-                // Save complete readable text in D1.
                 await env.DB.prepare(
                     `INSERT INTO documents
                         (id, content, source)
                      VALUES (?, ?, ?)
                      ON CONFLICT(id) DO UPDATE SET
                         content = excluded.content,
-                        source = excluded.source`
+                        source = excluded.source`,
                 )
                     .bind(id, content, source)
                     .run();
-                // Split the complete document into overlapping chunks.
-const chunks = chunkDocument(content);
 
-// Find vectors from the previous version of this document.
-const oldChunkRows = await env.DB.prepare(
-    "SELECT id FROM document_chunks WHERE document_id = ?",
-)
-    .bind(id)
-    .all<{ id: string }>();
+                const chunks = chunkDocument(content);
 
-const oldVectorIds = [
-    id, // Legacy document-level vector from the old ingestion design.
-    ...oldChunkRows.results.map((row) => row.id),
-];
+                const oldChunkRows = await env.DB.prepare(
+                    "SELECT id FROM document_chunks WHERE document_id = ?",
+                )
+                    .bind(id)
+                    .all<{ id: string }>();
 
-// Remove old vectors so stale content cannot be retrieved.
-await env.VECTORIZE.deleteByIds(oldVectorIds);
+                const oldVectorIds = [
+                    id,
+                    ...oldChunkRows.results.map((row) => row.id),
+                ];
 
-// Remove old D1 chunks before saving the new version.
-await env.DB.prepare(
-    "DELETE FROM document_chunks WHERE document_id = ?",
-)
-    .bind(id)
-    .run();
+                await env.VECTORIZE.deleteByIds(oldVectorIds);
 
-                // Save each chunk in D1 with its position in the source document.
+                await env.DB.prepare(
+                    "DELETE FROM document_chunks WHERE document_id = ?",
+                )
+                    .bind(id)
+                    .run();
+
                 for (let index = 0; index < chunks.length; index++) {
                     const chunk = chunks[index];
                     const chunkId = `${id}-chunk-${index}`;
@@ -787,7 +951,7 @@ await env.DB.prepare(
                     await env.DB.prepare(
                         `INSERT INTO document_chunks
                             (id, document_id, chunk_index, content, start_char, end_char)
-                        VALUES (?, ?, ?, ?, ?, ?)`,
+                         VALUES (?, ?, ?, ?, ?, ?)`,
                     )
                         .bind(
                             chunkId,
@@ -800,7 +964,6 @@ await env.DB.prepare(
                         .run();
                 }
 
-                // Generate one embedding for each document chunk.
                 const textsForEmbedding = chunks.map(
                     (chunk) => chunk.content,
                 );
@@ -813,9 +976,11 @@ await env.DB.prepare(
                     },
                 );
 
-                // Build one Vectorize record for each chunk.
                 const vectors = chunks.map((chunk, index) => {
-                    const vector = embeddingResult.data[index];
+                    const vector = getEmbeddingVector(
+                        embeddingResult,
+                        index,
+                    );
 
                     if (
                         !vector ||
@@ -841,7 +1006,6 @@ await env.DB.prepare(
                     };
                 });
 
-                // Store all chunk embeddings in Vectorize.
                 await env.VECTORIZE.upsert(vectors);
 
                 return Response.json({
@@ -867,12 +1031,11 @@ await env.DB.prepare(
                                 ? error.message
                                 : String(error),
                     },
-                    { status: 500 }
+                    { status: 500 },
                 );
             }
         }
 
-        // 4. Standalone embedding test
         if (
             url.pathname === "/test-embedding" &&
             request.method === "GET"
@@ -886,20 +1049,20 @@ await env.DB.prepare(
                         EMBEDDING_MODEL,
                         {
                             text: [text],
-                            pooling: "cls"
-                        }
+                            pooling: "cls",
+                        },
                     );
 
                 const vector =
-                    embeddingResult.data[0];
+                    getEmbeddingVector(embeddingResult, 0);
 
                 if (!vector) {
                     return Response.json(
                         {
                             error:
-                                "No embedding was generated."
+                                "No embedding was generated.",
                         },
-                        { status: 500 }
+                        { status: 500 },
                     );
                 }
 
@@ -908,7 +1071,7 @@ await env.DB.prepare(
                     model: EMBEDDING_MODEL,
                     dimensions: vector.length,
                     first_five_numbers:
-                        vector.slice(0, 5)
+                        vector.slice(0, 5),
                 });
             } catch (error) {
                 return Response.json(
@@ -918,22 +1081,20 @@ await env.DB.prepare(
                         details:
                             error instanceof Error
                                 ? error.message
-                                : String(error)
+                                : String(error),
                     },
-                    { status: 500 }
+                    { status: 500 },
                 );
             }
         }
 
-        // 5. Unknown route
         return Response.json(
             {
-                error: "Route not found"
+                error: "Route not found",
             },
             {
-                status: 404
-            }
+                status: 404,
+            },
         );
     },
 } satisfies ExportedHandler<Env>;
-

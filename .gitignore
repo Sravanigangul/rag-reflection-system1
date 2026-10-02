@@ -165,3 +165,8 @@ dist
 .env*
 !.env.example
 .wrangler/
+
+optn_policies.pdf
+optn_chunks.json
+src/pdf-test.ts
+test-pdf.mjs

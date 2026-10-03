@@ -1,3 +1,4 @@
+
 type IngestBody = {
     id?: unknown;
     content?: unknown;
@@ -32,6 +33,20 @@ type ReflectionResult = {
     supported: boolean;
     issues: string[];
     revisedAnswer: string;
+};
+
+type RetrievalAssessment = {
+    sufficient: boolean;
+    reason: string;
+    rewrittenQuery: string;
+};
+
+type HybridRetrievalResult = {
+    id: string;
+    score: number;
+    content: string;
+    source: string | null;
+    doc_type: string;
 };
 
 const EMBEDDING_MODEL = "@cf/baai/bge-small-en-v1.5" as const;
@@ -258,7 +273,71 @@ export function validateCitationNumbers(
             sourceNumber <= sourceCount,
     );
 }
+export function buildRetrievalAssessmentPrompt(
+    query: string,
+    context: string,
+): string {
+    return `
+You are evaluating whether retrieved evidence is sufficient to answer a user's question.
 
+User question:
+
+${query}
+
+Retrieved evidence:
+
+${context}
+
+Determine whether the retrieved evidence directly addresses the user's question.
+
+Return valid JSON with exactly this structure:
+
+{
+  "sufficient": true,
+  "reason": "...",
+  "rewrittenQuery": ""
+}
+
+Rules:
+- Set "sufficient" to true only when the retrieved evidence contains enough information to answer the user's question.
+- Do not answer the user's question.
+- Do not use outside knowledge.
+- Evaluate the evidence based on meaning, not just keyword overlap.
+- If the evidence is sufficient, set "rewrittenQuery" to an empty string.
+- If the evidence is insufficient, rewrite the user's question into a concise domain-specific retrieval query.
+- Prefer terminology likely to appear in formal policy or regulatory documents rather than conversational wording.
+- Preserve the user's original meaning.
+- Preserve the user's original intent when rewriting.
+`.trim();
+}
+export function parseRetrievalAssessment(
+    text: string,
+): RetrievalAssessment | null {
+    try {
+        const cleaned = text
+            .replace(/```json/gi, "")
+            .replace(/```/g, "")
+            .trim();
+
+        const parsed = JSON.parse(cleaned);
+
+        if (
+            typeof parsed.sufficient !== "boolean" ||
+            typeof parsed.reason !== "string" ||
+            typeof parsed.rewrittenQuery !== "string"
+        ) {
+            return null;
+        }
+
+        return {
+            sufficient: parsed.sufficient,
+            reason: parsed.reason,
+            rewrittenQuery: parsed.rewrittenQuery,
+        };
+    } catch {
+        return null;
+    }
+}
 export function buildReflectionPrompt(
     answer: string,
     context: string,
@@ -328,7 +407,115 @@ export function parseReflectionResult(
         return null;
     }
 }
+async function retrieveHybrid(
+    query: string,
+    env: Env,
+): Promise<HybridRetrievalResult[]> {
+    const embeddingResult = await env.AI.run(
+        EMBEDDING_MODEL,
+        {
+            text: [query],
+            pooling: "cls",
+        },
+    );
 
+    const queryVector =
+        getEmbeddingVector(embeddingResult, 0);
+
+    if (
+        !queryVector ||
+        queryVector.length !== EMBEDDING_DIMENSIONS
+    ) {
+        throw new Error(
+            "A valid query embedding was not generated.",
+        );
+    }
+
+    const searchResults =
+        await env.VECTORIZE.query(
+            queryVector,
+            {
+                topK: 5,
+                returnMetadata: "all",
+            },
+        );
+
+    const semanticMatches =
+        searchResults.matches
+            .filter(
+                (match) =>
+                    match.score >=
+                    MIN_SIMILARITY_SCORE,
+            )
+            .map((match) => ({
+                id: match.id,
+            }));
+
+    const ftsQuery = buildFtsQuery(query);
+
+    const lexicalResult = await env.DB
+        .prepare(`
+            SELECT
+                chunk_id AS id,
+                bm25(document_chunks_fts)
+                    AS lexical_score
+            FROM document_chunks_fts
+            WHERE document_chunks_fts MATCH ?
+            ORDER BY lexical_score
+            LIMIT 5
+        `)
+        .bind(ftsQuery)
+        .all<{
+            id: string;
+            lexical_score: number;
+        }>();
+
+    const fusedResults =
+        reciprocalRankFusion(
+            semanticMatches,
+            lexicalResult.results.map(
+                (match) => ({
+                    id: match.id,
+                }),
+            ),
+        )
+        .slice(0, 5);
+
+    const results: HybridRetrievalResult[] = [];
+
+    for (const fusedResult of fusedResults) {
+        const chunk = await env.DB
+            .prepare(`
+                SELECT
+                    document_chunks.id,
+                    document_chunks.content,
+                    documents.source
+                FROM document_chunks
+                JOIN documents
+                    ON documents.id =
+                    document_chunks.document_id
+                WHERE document_chunks.id = ?
+            `)
+            .bind(fusedResult.id)
+            .first<{
+                id: string;
+                content: string;
+                source: string | null;
+            }>();
+
+        if (chunk) {
+            results.push({
+                id: chunk.id,
+                score: fusedResult.rrfScore,
+                content: chunk.content,
+                source: chunk.source,
+                doc_type: "chunk",
+            });
+        }
+    }
+
+    return results;
+}
 export default {
     async fetch(request, env, ctx): Promise<Response> {
         const url = new URL(request.url);
@@ -370,13 +557,14 @@ export default {
             }
 
             const query = body.query.trim();
+            let searchQuery = query;
 
             try {
                 const embeddingResult =
                     await env.AI.run(
                         EMBEDDING_MODEL,
                         {
-                            text: [query],
+                            text: [searchQuery],
                             pooling: "cls",
                         },
                     );
@@ -406,7 +594,7 @@ export default {
                         },
                     );
 
-                const ftsQuery = buildFtsQuery(query);
+                const ftsQuery = buildFtsQuery(searchQuery);
 
                 const lexicalResult = await env.DB
                     .prepare(
@@ -524,8 +712,8 @@ export default {
                         sources: [],
                     });
                 }
-
-                const context = fusedMatches
+                let activeMatches = fusedMatches;
+                let context = activeMatches
                     .filter((match) => match.content !== null)
                     .map(
                         (match, index) =>
@@ -543,6 +731,141 @@ ${match.content}`,
                         sources: [],
                     });
                 }
+
+                const retrievalAssessmentPrompt =
+    buildRetrievalAssessmentPrompt(
+        query,
+        context,
+    );
+
+const retrievalAssessmentResponse =
+    await env.AI.run(
+        GENERATION_MODEL,
+        {
+            messages: [
+                {
+                    role: "user",
+                    content: retrievalAssessmentPrompt,
+                },
+            ],
+            temperature: 0,
+            max_tokens: 300,
+            chat_template_kwargs: {
+                enable_thinking: false,
+            },
+        },
+    );
+
+const retrievalAssessmentContent =
+    retrievalAssessmentResponse.choices?.[0]
+        ?.message?.content;
+
+const retrievalAssessment =
+    typeof retrievalAssessmentContent === "string"
+        ? parseRetrievalAssessment(
+            retrievalAssessmentContent,
+        )
+        : null;
+
+if (
+    retrievalAssessment &&
+    !retrievalAssessment.sufficient &&
+    retrievalAssessment.rewrittenQuery.trim()
+) {
+    searchQuery =
+        retrievalAssessment.rewrittenQuery.trim();
+}
+
+let retrySearchResults = null;
+
+if (searchQuery !== query) {
+    const retryEmbeddingResult =
+        await env.AI.run(
+            EMBEDDING_MODEL,
+            {
+                text: [searchQuery],
+                pooling: "cls",
+            },
+        );
+
+    const retryQueryVector =
+        getEmbeddingVector(
+            retryEmbeddingResult,
+            0,
+        );
+
+    if (
+        retryQueryVector &&
+        retryQueryVector.length ===
+            EMBEDDING_DIMENSIONS
+    ) {
+        retrySearchResults =
+            await env.VECTORIZE.query(
+                retryQueryVector,
+                {
+                    topK: 5,
+                    returnMetadata: "all",
+                },
+            );
+    }
+}
+let retryMatches: {
+    id: string;
+    score: number;
+    content: string;
+    source: string | null;
+    doc_type: string;
+}[] = [];
+
+if (retrySearchResults) {
+    for (const match of retrySearchResults.matches) {
+        if (
+            match.score <
+            MIN_SIMILARITY_SCORE
+        ) {
+            continue;
+        }
+
+        const chunk = await env.DB
+            .prepare(`
+                SELECT
+                    document_chunks.id,
+                    document_chunks.content,
+                    documents.source
+                FROM document_chunks
+                JOIN documents
+                    ON documents.id =
+                    document_chunks.document_id
+                WHERE document_chunks.id = ?
+            `)
+            .bind(match.id)
+            .first<{
+                id: string;
+                content: string;
+                source: string | null;
+            }>();
+
+        if (chunk) {
+            retryMatches.push({
+                id: chunk.id,
+                score: match.score,
+                content: chunk.content,
+                source: chunk.source,
+                doc_type: "chunk",
+            });
+        }
+    }
+}
+if (retryMatches.length > 0) {
+    activeMatches = retryMatches;
+
+    context = activeMatches
+        .map(
+            (match, index) =>
+                `[Source ${index + 1}]\n${match.content}`,
+        )
+        .join("\n\n");
+}
 
                 const generationResult =
                     await env.AI.run(
@@ -636,13 +959,13 @@ ${query}`,
                 const validCitationNumbers =
                     validateCitationNumbers(
                         extractedCitations,
-                        fusedMatches.length,
+                        activeMatches.length,
                     );
 
                 const citations = validCitationNumbers.map(
                     (sourceNumber) => {
                         const match =
-                            fusedMatches[sourceNumber - 1];
+                            activeMatches[sourceNumber - 1];
 
                         return {
                             sourceNumber,
@@ -657,7 +980,10 @@ ${query}`,
                     answer: finalAnswer,
                     citations,
                     reflection,
-                    sources: fusedMatches.map(
+                    retrievalAssessment,
+                    retrievalRetried: retryMatches.length > 0,
+                    retrievalQuery: searchQuery,
+                    sources: activeMatches.map(
                         (match) => ({
                             id: match.id,
                             source: match.source,

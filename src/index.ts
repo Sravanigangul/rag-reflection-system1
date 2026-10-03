@@ -1,4 +1,4 @@
-
+import { UI_HTML } from "./ui";
 type IngestBody = {
     id?: unknown;
     content?: unknown;
@@ -519,7 +519,20 @@ async function retrieveHybrid(
 export default {
     async fetch(request, env, ctx): Promise<Response> {
         const url = new URL(request.url);
-
+        if (
+    request.method === "GET" &&
+    url.pathname === "/"
+) {
+    return new Response(
+        UI_HTML,
+        {
+            headers: {
+                "Content-Type":
+                    "text/html; charset=UTF-8",
+            },
+        },
+    );
+}
         if (url.pathname === "/") {
             return Response.json({
                 message: "My RAG application is running",

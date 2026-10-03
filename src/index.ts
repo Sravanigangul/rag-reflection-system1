@@ -866,6 +866,73 @@ if (retryMatches.length > 0) {
         )
         .join("\n\n");
 }
+let retryAssessment: RetrievalAssessment | null = null;
+
+if (retryMatches.length > 0) {
+    const retryAssessmentPrompt =
+        buildRetrievalAssessmentPrompt(
+            query,
+            context,
+        );
+
+    const retryAssessmentResponse =
+        await env.AI.run(
+            GENERATION_MODEL,
+            {
+                messages: [
+                    {
+                        role: "user",
+                        content: retryAssessmentPrompt,
+                    },
+                ],
+                temperature: 0,
+                max_tokens: 300,
+                chat_template_kwargs: {
+                    enable_thinking: false,
+                },
+            },
+        );
+
+    const retryAssessmentContent =
+        retryAssessmentResponse.choices?.[0]
+            ?.message?.content;
+
+    retryAssessment =
+        typeof retryAssessmentContent === "string"
+            ? parseRetrievalAssessment(
+                retryAssessmentContent,
+            )
+            : null;
+}
+
+if (
+    retryAssessment &&
+    !retryAssessment.sufficient
+) {
+    return Response.json({
+        query,
+        answer:
+            "I do not have enough information in the retrieved OPTN policy evidence to answer this question.",
+        citations: [],
+        reflection: {
+            supported: true,
+            issues: [],
+            revisedAnswer: null,
+        },
+        retrievalAssessment,
+        retryAssessment,
+        retrievalRetried: true,
+        retrievalQuery: searchQuery,
+        sources: activeMatches.map(
+            (match) => ({
+                id: match.id,
+                source: match.source,
+                score: match.score,
+                content: match.content,
+            }),
+        ),
+    });
+}
 
                 const generationResult =
                     await env.AI.run(
@@ -983,6 +1050,7 @@ ${query}`,
                     retrievalAssessment,
                     retrievalRetried: retryMatches.length > 0,
                     retrievalQuery: searchQuery,
+                    retryAssessment,
                     sources: activeMatches.map(
                         (match) => ({
                             id: match.id,

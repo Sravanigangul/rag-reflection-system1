@@ -1,0 +1,98 @@
+[
+  {
+    "id": "direct-factual",
+    "category": "direct_factual",
+    "expectedSections": "8.2",
+    "sectionMatch": true,
+    "retrievalRetried": false,
+    "retryMatch": null,
+    "reflectionSupported": true,
+    "answer": "The kidney allocation score is determined by the total of all points assigned based on the following factors: * **Waiting Time:** Candidates receive 1/365 points for each day since meeting specific qualifying criteria [Source 1]. * **Age and HLA Mismatch:** * Aged 0-10 at the time of match with a 0-ABDR mismatch: 4 points [Source 1]. * Aged 11-17 at the time of match with a 0-ABDR mismatch: 3 points [Source 1]. * **Donor KDPI Score:** Aged 0-10 at the time of match and the donor has a KDPI score <35%: 1 point [Source 1]. * **CPRA Score:** Points are assigned based on the candidate's CPRA score (e.g., 0 points for scores 0-19, and up to 202.10 points for a score of 100) [Source 1]. * **Prior Living Donor Status:** 4 points [Source 1]. * **Sensitization:** Candidates with a CPRA of at least 20% receive points based on Table 8-2 [Source 1]. * **HLA-DR Mismatch:** * A single HLA-DR mismatch: 1 point [Source 1]. * A zero HLA-DR mismatch: 2 points [Source 1]. * **Proximity to Donor Hospital:** Points are assigned based on the distance (calculated in nautical miles) between the candidate's hospital of registration and the donor hospital [Source 1].",
+    "abstained": false,
+    "answerBehaviorMatch": true
+  },
+  {
+    "id": "procedural-kdpi",
+    "category": "procedural",
+    "expectedSections": "8.4.B",
+    "sectionMatch": true,
+    "retrievalRetried": false,
+    "retryMatch": null,
+    "reflectionSupported": true,
+    "answer": "The Kidney Donor Profile Index (KDPI) is calculated through the following process: 1. **Calculate the KDRI score components:** Sum each of the applicable KDRI score components provided in Table 8-5 [Source 1]. These components are based on donor characteristics including age, creatinine, history of hypertension, history of diabetes, cause of death, height, weight, and donor type [Source 1]. 2. **Apply antilog:** Apply the antilog (base e) function to the sum of the components [Source 1]. 3. **Divide by median:** Divide the resulting KDRI by the median KDRI value of the most recent donor reference population [Source 1]. 4. **Map to KDPI:** Determine the KDPI using the OPTN’s KDRI-to-KDPI mapping table [Source 1]. The final KDPI score is rounded to the nearest integer [Source 1]. The KDPI is defined as the percentage of donors in the reference population that have a KDRI less than or equal to the donor's KDRI [Source 1].",
+    "abstained": false,
+    "answerBehaviorMatch": true
+  },
+  {
+    "id": "multi-chunk-liver-kidney",
+    "category": "multi_chunk",
+    "expectedSections": "9.9",
+    "sectionMatch": true,
+    "retrievalRetried": false,
+    "retryMatch": null,
+    "reflectionSupported": true,
+    "answer": "To be eligible for liver-kidney allocation, a potential transplant recipient (PTR) must be registered for both a liver and a kidney at the same transplant hospital and meet specific distance and MELD requirements, as well as medical eligibility criteria outlined in Table 9-17 [Source 1]. **Distance and MELD Requirements** A PTR must meet one of the following criteria: * Was less than 18 years old when registered on the liver waiting list [Source 1]. * Is registered at a transplant hospital at or within 150 nautical miles of the donor hospital and has a MELD of 15 or greater [Source 1]. * Is registered at a transplant hospital at or within 500 nautical miles of the donor hospital and has a MELD of 29 or greater [Source 1]. * Is registered at a transplant hospital at or within 500 nautical miles of the donor hospital and is adult status 1A [Source 1]. **Medical Eligibility Criteria (Table 9-17)** A transplant nephrologist must confirm one of the following diagnoses, and the transplant program must document and report the findings to the OPTN: * **Chronic kidney disease (CKD):** Must have a GFR $\\le$ 60 mL/min for more than 90 consecutive days, plus at least one of the following: * The candidate has begun regularly administered dialysis as an end-stage renal disease (ESRD) patient (in a hospital-based, independent non-hospital based, or home setting) [Source 1]. * At the time of registration on the kidney waiting list, the candidate's most recent GFR or measured/estimated creatinine clearance (CrCl) is $\\le$ 30 mL/min [Source 1]. * On a date after registration on the kidney waiting list, the candidate's GFR or measured/estimated CrCl is $\\le$ 30 mL/min [Source 1]. * **Sustained acute kidney injury:** Must meet at least one (or a combination) of the following for the last 6 weeks: * The candidate has been on dialysis at least once every 7 days [Source 1]. * The candidate has a GFR or measured/estimated CrCl $\\le$ 25 mL/min at least once every 7 days [Source 1, Source 3]. * *Note: If eligibility is not confirmed at least once every seven days for the last 6 weeks, the candidate is ineligible [Source 1, Source 3].* * **Metabolic disease:** A diagnosis of at least one of the following: * Hyperoxaluria [Source 3] * Atypical hemolytic uremic syndrome (HUS) from mutations in factor H or factor I [Source 3] * Familial non-neuropathic systemic amyloidosis [Source 3] * Methylmalonic aciduria [Source 3]",
+    "abstained": false,
+    "answerBehaviorMatch": true
+  },
+  {
+    "id": "retrieval-recovery-prior-donor",
+    "category": "retrieval_recovery",
+    "expectedSections": "8.4.E",
+    "sectionMatch": true,
+    "retrievalRetried": true,
+    "retryMatch": true,
+    "reflectionSupported": true,
+    "answer": "A kidney candidate will be classified as a prior living donor if they donated at least one of the following within the United States or its territories: * Kidney [Source 3] * Liver segment [Source 3] * Lung segment [Source 3] * Partial pancreas [Source 3] * Small bowel segment [Source 3] To receive this classification, the candidate's physician must report the name of the recipient (or intended recipient), the recipient's transplant hospital, and the date the donated organ was procured to the OPTN [Source 3].",
+    "abstained": false,
+    "answerBehaviorMatch": true
+  },
+  {
+    "id": "policy-terminology-prior-donor",
+    "category": "domain_terminology",
+    "expectedSections": "8.4.E",
+    "sectionMatch": true,
+    "retrievalRetried": false,
+    "retryMatch": null,
+    "reflectionSupported": true,
+    "answer": "Prior living kidney donors who become kidney transplant candidates are prioritized according to OPTN Policy 8.2: Kidney Allocation Score [Source 1, Source 4]. A candidate is classified as a prior living donor if they donated at least one of the following within the United States or its territories: * Kidney * Liver segment * Lung segment * Partial pancreas * Small bowel segment [Source 2]. To meet this classification, the candidate's physician must report the name of the recipient (or intended recipient), the recipient's transplant hospital, and the date the donated organ was procured to the OPTN [Source 2].",
+    "abstained": false,
+    "answerBehaviorMatch": true
+  },
+  {
+    "id": "cross-policy-prior-donor",
+    "category": "conversational",
+    "expectedSections": "8.4.E",
+    "sectionMatch": true,
+    "retrievalRetried": false,
+    "retryMatch": null,
+    "reflectionSupported": true,
+    "answer": "Current practice is to prioritize prior living kidney donors who become kidney transplant candidates according to OPTN Policy 8.2: Kidney Allocation Score [Source 1, Source 2].",
+    "abstained": false,
+    "answerBehaviorMatch": true
+  },
+  {
+    "id": "unsupported-medical-record-retention",
+    "category": "unsupported",
+    "expectedSections": "",
+    "sectionMatch": null,
+    "retrievalRetried": true,
+    "retryMatch": null,
+    "reflectionSupported": true,
+    "answer": "I do not have enough information in the retrieved OPTN policy evidence to answer this question.",
+    "abstained": true,
+    "answerBehaviorMatch": true
+  },
+  {
+    "id": "out-of-scope-treatment",
+    "category": "out_of_scope",
+    "expectedSections": "",
+    "sectionMatch": null,
+    "retrievalRetried": true,
+    "retryMatch": null,
+    "reflectionSupported": true,
+    "answer": "I do not have enough information in the retrieved OPTN policy evidence to answer this question.",
+    "abstained": true,
+    "answerBehaviorMatch": true
+  }
+]

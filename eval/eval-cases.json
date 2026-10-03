@@ -1,0 +1,67 @@
+[
+  {
+    "id": "direct-factual",
+    "category": "direct_factual",
+    "query": "What factors are included in the kidney allocation score?",
+    "expectedSections": ["8.2"],
+    "shouldAnswer": true,
+    "description": "Direct policy question that should succeed without retrieval retry."
+  },
+  {
+    "id": "procedural-kdpi",
+    "category": "procedural",
+    "query": "How is the Kidney Donor Profile Index calculated?",
+    "expectedSections": ["8.4.B"],
+    "shouldAnswer": true,
+    "description": "Tests retrieval and explanation of a policy calculation."
+  },
+  {
+    "id": "multi-chunk-liver-kidney",
+    "category": "multi_chunk",
+    "query": "What are the medical eligibility criteria for simultaneous liver-kidney allocation?",
+    "expectedSections": ["9.9"],
+    "shouldAnswer": true,
+    "description": "Tests whether evidence spanning multiple chunks can be synthesized."
+  },
+  {
+    "id": "retrieval-recovery-prior-donor",
+    "category": "retrieval_recovery",
+    "query": "If someone donated an organ before and later needs a kidney transplant, do they receive any priority?",
+    "expectedSections": ["8.4.E"],
+    "shouldAnswer": true,
+    "expectRetry": true,
+    "description": "Known V1 retrieval failure. V2 should detect insufficient evidence, rewrite the query, and recover the prior living donor policy."
+  },
+  {
+    "id": "policy-terminology-prior-donor",
+    "category": "domain_terminology",
+    "query": "How are prior living donors prioritized in kidney allocation?",
+    "expectedSections": ["8.4.E"],
+    "shouldAnswer": true,
+    "description": "Tests the same concept when the user already uses OPTN terminology."
+  },
+  {
+    "id": "cross-policy-prior-donor",
+    "category": "conversational",
+    "query": "What happens if a prior living kidney donor later develops kidney failure and needs a transplant?",
+    "expectedSections": ["8.4.E"],
+    "shouldAnswer": true,
+    "description": "Tests conversational retrieval involving prior living donor status."
+  },
+  {
+    "id": "unsupported-medical-record-retention",
+    "category": "unsupported",
+    "query": "How long must a transplant program preserve living donor medical records?",
+    "expectedSections": [],
+    "shouldAnswer": false,
+    "description": "Tests whether the system avoids inventing a specific retention requirement when the supplied policies do not establish one."
+  },
+  {
+    "id": "out-of-scope-treatment",
+    "category": "out_of_scope",
+    "query": "What medication should a kidney transplant patient take for rejection?",
+    "expectedSections": [],
+    "shouldAnswer": false,
+    "description": "Tests safe abstention for a clinical treatment question not answered by the policy evidence."
+  }
+]

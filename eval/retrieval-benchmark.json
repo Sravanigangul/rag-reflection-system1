@@ -1,0 +1,452 @@
+[
+  {
+    "id": "kidney-kdpi-calculation",
+    "category": "direct-factual",
+    "query": "How is the Kidney Donor Profile Index calculated?",
+    "relevantSections": ["8.4.B"],
+    "shouldAnswer": true,
+    "difficulty": "easy",
+    "notes": "Direct terminology from the policy."
+  },
+  {
+    "id": "prior-living-donor-conversational",
+    "category": "paraphrased",
+    "query": "If someone donated an organ before and later needs a kidney transplant, do they receive any priority?",
+    "relevantSections": ["8.4.E"],
+    "shouldAnswer": true,
+    "difficulty": "hard",
+    "notes": "Conversational wording; known retrieval-recovery case."
+  },
+  {
+    "id": "unsupported-record-retention",
+    "category": "unsupported",
+    "query": "How long must a transplant program preserve living donor medical records?",
+    "relevantSections": [],
+    "shouldAnswer": false,
+    "difficulty": "hard",
+    "notes": "Related sections exist, but retrieved OPTN evidence does not establish a complete medical-record retention period."
+  },
+  {
+    "id": "deceased-donor-infectious-testing",
+    "category": "direct-factual",
+    "query": "What infectious disease testing is required for potential deceased organ donors?",
+    "relevantSections": ["2.9"],
+    "shouldAnswer": true,
+    "difficulty": "easy",
+    "notes": "Direct policy terminology."
+  },
+  {
+    "id": "inactive-candidate-waiting-time",
+    "category": "procedural",
+    "query": "Do transplant candidates continue to accrue waiting time while they are inactive?",
+    "relevantSections": ["3.6.A"],
+    "shouldAnswer": true,
+    "difficulty": "medium",
+    "notes": "Answer varies by organ and requires the inactive-candidate waiting-time table."
+  },
+  {
+    "id": "cpra-calculation",
+    "category": "direct-factual",
+    "query": "How is a transplant candidate's CPRA calculated?",
+    "relevantSections": ["4.6"],
+    "shouldAnswer": true,
+    "difficulty": "easy",
+    "notes": "Direct calculation question."
+  },
+  {
+    "id": "organ-offer-response-time",
+    "category": "procedural",
+    "query": "How much time does a transplant hospital have to respond to an organ offer?",
+    "relevantSections": ["5.6.B"],
+    "shouldAnswer": true,
+    "difficulty": "medium",
+    "notes": "Requires distinguishing initial notification and subsequent acceptance timeframes."
+  },
+  {
+    "id": "adult-heart-status-one",
+    "category": "eligibility",
+    "query": "What conditions can qualify an adult heart transplant candidate for Status 1?",
+    "relevantSections": ["6.1.A"],
+    "shouldAnswer": true,
+    "difficulty": "medium",
+    "notes": "Section spans multiple chunks but retains the same section number."
+  },
+  {
+    "id": "meld-score-calculation",
+    "category": "calculation",
+    "query": "How is the MELD score calculated for an adult liver transplant candidate?",
+    "relevantSections": ["9.1.D"],
+    "shouldAnswer": true,
+    "difficulty": "medium",
+    "notes": "Tests retrieval of a formula-heavy policy section."
+  },
+  {
+    "id": "lung-28-day-values",
+    "category": "procedural",
+    "query": "What clinical values must be reassessed every 28 days for certain lung waiting-list candidates?",
+    "relevantSections": ["10.3.A"],
+    "shouldAnswer": true,
+    "difficulty": "medium",
+    "notes": "Tests periodic reporting requirements."
+  },
+  {
+    "id": "living-donor-exclusions",
+    "category": "eligibility",
+    "query": "What conditions require a living donor to be excluded from organ donation?",
+    "relevantSections": ["14.4.E"],
+    "shouldAnswer": true,
+    "difficulty": "easy",
+    "notes": "Direct living-donor exclusion criteria."
+  },
+  {
+    "id": "living-kidney-donor-diabetes",
+    "category": "paraphrased",
+    "query": "Can someone with diabetes be accepted as a living kidney donor?",
+    "relevantSections": ["14.4.E"],
+    "shouldAnswer": true,
+    "difficulty": "hard",
+    "notes": "Conversational question requiring distinction between type 1 and type 2 diabetes criteria."
+  },
+  {
+    "id": "deceased-kidney-offer-information",
+  "category": "direct-factual",
+  "query": "What additional information must an OPO provide with a deceased donor kidney offer?",
+  "relevantSections": ["2.11.A"],
+  "shouldAnswer": true,
+  "difficulty": "easy",
+  "notes": "Tests retrieval of kidney-specific deceased donor offer information."
+},
+{
+  "id": "waiting-list-removal-after-death",
+  "category": "paraphrased",
+  "query": "What must a transplant hospital do if a patient dies while waiting for an organ?",
+  "relevantSections": ["3.9"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Conversational wording for candidate removal and OPTN notification requirements."
+},
+{
+  "id": "kidney-final-crossmatch",
+  "category": "procedural",
+  "query": "Is a final crossmatch required before a kidney transplant?",
+  "relevantSections": ["4.7.A"],
+  "shouldAnswer": true,
+  "difficulty": "easy",
+  "notes": "Tests kidney crossmatch requirements."
+},
+{
+  "id": "high-kdpi-consent",
+  "category": "procedural",
+  "query": "When must informed consent be obtained from a candidate willing to accept a kidney with a KDPI above 85%?",
+  "relevantSections": ["5.3.C"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Tests timing of informed consent for high-KDPI kidney offers."
+},
+{
+  "id": "dual-kidney-allocation",
+  "category": "eligibility",
+  "query": "Under what donor conditions can both kidneys be offered under the dual-kidney allocation policy?",
+  "relevantSections": ["8.5.A"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Tests KDPI and donor-weight conditions for dual kidneys."
+},
+{
+  "id": "hcc-t2-eligibility",
+  "category": "eligibility",
+  "query": "What tumor criteria qualify an HCC candidate as T2 stage for a standardized MELD or PELD exception?",
+  "relevantSections": ["9.5.I"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Relevant evidence appears inside a long multi-chunk HCC policy section."
+},
+{
+  "id": "hcc-afp-over-1000",
+  "category": "paraphrased",
+  "query": "Can a liver candidate with an AFP above 1000 still become eligible for a standardized HCC exception after treatment?",
+  "relevantSections": ["9.5.I"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Conversational clinical scenario requiring retrieval from a long section."
+},
+{
+  "id": "lung-composite-score-components",
+  "category": "direct-factual",
+  "query": "What components make up the lung composite allocation score?",
+  "relevantSections": ["10.1"],
+  "shouldAnswer": true,
+  "difficulty": "easy",
+  "notes": "Direct lung allocation score question."
+},
+{
+  "id": "adult-kidney-pancreas-wait-time",
+  "category": "eligibility",
+  "query": "When does an adult kidney-pancreas candidate begin accruing waiting time?",
+  "relevantSections": ["11.3.B"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Requires three eligibility conditions."
+},
+{
+  "id": "post-transplant-infection-testing",
+  "category": "procedural",
+  "query": "What infectious disease testing is required after an organ transplant and when must it be performed?",
+  "relevantSections": ["15.3.C"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Tests both required NAT tests and post-transplant timing."
+},
+{
+  "id": "living-donor-follow-up-period",
+  "category": "paraphrased",
+  "query": "For how long are living donors followed under OPTN data submission requirements?",
+  "relevantSections": ["18.4"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Tests distinction between living donor follow-up and general medical-record retention."
+},
+{
+  "id": "kidney-graft-early-failure-wait-time",
+  "category": "procedural",
+  "query": "Can a kidney recipient get their previous waiting time back if the transplanted kidney fails shortly after transplant?",
+  "relevantSections": ["3.6.B"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Conversational scenario testing kidney waiting-time reinstatement after early graft non-function."
+},
+{
+  "id": "allocation-citizenship-discrimination",
+  "category": "paraphrased",
+  "query": "Can a patient's citizenship, ability to pay, race, or religion affect whether they receive a deceased donor organ?",
+  "relevantSections": ["5.4.A"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Conversational nondiscrimination question."
+},
+{
+  "id": "liver-kidney-allocation-rules",
+  "category": "multi-section",
+  "query": "How are combined liver-kidney offers allocated and what medical criteria must a candidate meet?",
+  "relevantSections": ["5.10.B", "9.9"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Policy 5.10.B directs liver-kidney combinations to Policy 9.9, which contains the substantive allocation and medical eligibility criteria."
+},
+{
+  "id": "prior-liver-recipient-kidney-priority",
+  "category": "eligibility",
+  "query": "When can someone who previously received a liver transplant receive priority on the kidney waiting list?",
+  "relevantSections": ["8.4.F"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Tests post-liver-transplant kidney priority criteria."
+},
+{
+  "id": "prior-heart-recipient-kidney-priority",
+  "category": "eligibility",
+  "query": "When can a previous heart transplant recipient qualify for priority for a kidney?",
+  "relevantSections": ["8.4.G"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Tests post-heart-transplant kidney priority criteria."
+},
+{
+  "id": "prior-lung-recipient-kidney-priority",
+  "category": "eligibility",
+  "query": "If a lung transplant recipient later develops severe kidney failure, when can they receive kidney allocation priority?",
+  "relevantSections": ["8.4.H"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Clinical conversational phrasing for post-lung-transplant kidney priority."
+},
+{
+  "id": "liver-recipient-kidney-graft-failure",
+  "category": "multi-section",
+  "query": "If a prior liver recipient receives a priority kidney transplant and that kidney fails soon after transplant, how can kidney priority or waiting time be restored?",
+  "relevantSections": ["8.4.F", "3.6.B"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Requires both prior-liver-recipient kidney priority rules and kidney waiting-time reinstatement rules."
+},
+{
+  "id": "kpd-phi-consent",
+  "category": "procedural",
+  "query": "Does a kidney paired donation candidate have to consent before their health information can be shared with other hospitals in the exchange?",
+  "relevantSections": ["13.3.A"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Tests KPD protected-health-information consent requirements."
+},
+{
+  "id": "living-donor-specimen-retention",
+  "category": "direct-factual",
+  "query": "How long must a recovery hospital store a living donor's blood specimen?",
+  "relevantSections": ["14.8.B"],
+  "shouldAnswer": true,
+  "difficulty": "easy",
+  "notes": "Tests precise distinction between specimen retention and medical-record retention."
+},
+{
+  "id": "living-donor-followup-form-timing",
+  "category": "procedural",
+  "query": "When are Living Donor Follow-up forms due after donation?",
+  "relevantSections": ["18.1.B"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Tests six-month, one-year and two-year LDF submission timing."
+},
+{
+  "id": "living-kidney-donor-followup-data",
+  "category": "procedural",
+  "query": "What clinical and laboratory information must be reported during follow-up of living kidney donors?",
+  "relevantSections": ["18.4.A"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Tests kidney-specific living donor follow-up reporting."
+},
+{
+  "id": "kidney-vs-liver-donor-followup",
+  "category": "multi-section",
+  "query": "How do the required follow-up data differ between living kidney donors and living liver donors?",
+  "relevantSections": ["18.4.A", "18.4.B"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Comparison requiring evidence from both kidney- and liver-specific living donor reporting sections."
+},
+{
+  "id": "waiting-time-transfer-programs",
+  "category": "procedural",
+  "query": "Can a transplant candidate move their accumulated waiting time from one transplant program to another?",
+  "relevantSections": ["3.6.C"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Conversational question about individual waiting-time transfers."
+},
+{
+  "id": "organ-offer-medical-suitability",
+  "category": "procedural",
+  "query": "Who is responsible for determining whether an offered organ is medically suitable for a potential recipient?",
+  "relevantSections": ["5.6.A"],
+  "shouldAnswer": true,
+  "difficulty": "easy",
+  "notes": "Tests responsibility of the transplanting surgeon when reviewing organ offers."
+},
+{
+  "id": "adult-heart-status-two-devices",
+  "category": "eligibility",
+  "query": "What types of mechanical circulatory support can qualify an adult heart candidate for Status 2?",
+  "relevantSections": ["6.1.B"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Relevant evidence spans multiple chunks within the long Adult Heart Status 2 section."
+},
+{
+  "id": "heart-status-two-iabp",
+  "category": "conversational",
+  "query": "Can a heart transplant candidate on an intra-aortic balloon pump qualify for Status 2?",
+  "relevantSections": ["6.1.B"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Specific device scenario embedded deep within a multi-chunk section."
+},
+{
+  "id": "kidney-epts-factors",
+  "category": "direct-factual",
+  "query": "What factors are used to calculate a kidney candidate's EPTS score?",
+  "relevantSections": ["8.4.A"],
+  "shouldAnswer": true,
+  "difficulty": "easy",
+  "notes": "Tests retrieval of EPTS factors: dialysis time, diabetes, prior solid organ transplant, and age."
+},
+{
+  "id": "kidney-medical-urgency",
+  "category": "eligibility",
+  "query": "What must a kidney candidate demonstrate to qualify for medically urgent status?",
+  "relevantSections": ["8.4.A"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Medical urgency criteria occur later within the Candidate Classifications section."
+},
+{
+  "id": "hilar-cca-exception",
+  "category": "eligibility",
+  "query": "What requirements must be met for a candidate to receive a standardized MELD or PELD exception for hilar cholangiocarcinoma?",
+  "relevantSections": ["9.5.A"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Tests detailed Hilar CCA exception eligibility requirements."
+},
+{
+  "id": "lung-six-minute-walk-oxygen",
+  "category": "procedural",
+  "query": "What oxygen testing is required before a six-minute walk test for a lung transplant candidate?",
+  "relevantSections": ["10.3"],
+  "shouldAnswer": true,
+  "difficulty": "medium",
+  "notes": "Tests oxygen titration requirements associated with reported six-minute walk distance."
+},
+{
+  "id": "pre-vs-post-transplant-infectious-testing",
+  "category": "multi-section",
+  "query": "How do infectious disease testing requirements differ before and after organ transplantation?",
+  "relevantSections": ["15.2", "15.3.C"],
+  "shouldAnswer": true,
+  "difficulty": "hard",
+  "notes": "Requires pre-transplant candidate testing and post-transplant recipient testing policies."
+},
+{
+  "id": "unsupported-medical-record-years",
+  "category": "unsupported",
+  "query": "Exactly how many years must the complete medical record of a living organ donor be retained?",
+  "relevantSections": [],
+  "shouldAnswer": false,
+  "difficulty": "hard",
+  "notes": "Policy-adjacent adversarial case. Corpus establishes specimen retention but not a complete medical-record retention period."
+},
+{
+  "id": "unsupported-kidney-survival-prediction",
+  "category": "unsupported",
+  "query": "What is this patient's predicted five-year kidney graft survival probability?",
+  "relevantSections": [],
+  "shouldAnswer": false,
+  "difficulty": "medium",
+  "notes": "OPTN policy corpus cannot calculate an individual patient's graft-survival probability."
+},
+{
+  "id": "unsupported-immunosuppressant-dose",
+  "category": "unsupported",
+  "query": "What tacrolimus dose should be prescribed to a kidney transplant patient with a high creatinine level?",
+  "relevantSections": [],
+  "shouldAnswer": false,
+  "difficulty": "medium",
+  "notes": "Clinical treatment recommendation outside the policy evidence."
+},
+{
+  "id": "unsupported-best-transplant-hospital",
+  "category": "unsupported",
+  "query": "Which transplant hospital in the United States has the best kidney transplant outcomes?",
+  "relevantSections": [],
+  "shouldAnswer": false,
+  "difficulty": "medium",
+  "notes": "Comparative hospital ranking is not established by the OPTN policy corpus."
+},
+{
+  "id": "unsupported-transplant-cost",
+  "category": "unsupported",
+  "query": "How much will a kidney transplant cost a patient with private insurance?",
+  "relevantSections": [],
+  "shouldAnswer": false,
+  "difficulty": "easy",
+  "notes": "Patient-specific financial cost information is outside the policy corpus."
+},
+{
+  "id": "unsupported-rejection-symptoms",
+  "category": "unsupported",
+  "query": "What symptoms should a kidney transplant patient watch for to know whether their body is rejecting the organ?",
+  "relevantSections": [],
+  "shouldAnswer": false,
+  "difficulty": "medium",
+  "notes": "Clinical diagnostic guidance is outside the policy evidence."
+}
+]

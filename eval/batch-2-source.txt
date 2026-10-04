@@ -1,0 +1,132 @@
+SECTION: 2.11.A | Required Information for Deceased Kidney Donors
+
+OPTN Policy 2: Deceased Donor Organ Procurement
+Section 2.11.A: Required Information for Deceased Kidney Donors
+
+The host OPO must provide all the following additional information for all deceased donor kidney offers: 1. Anatomical description, including number of blood vessels, ureters, and approximate length of each 2. Human leukocyte antigen (HLA) information as follows: A, B, Bw4, Bw6, C, DR, DR51, DR52, DR53, DQA1, DQB1, DPA1, and DPB1 antigens prior to organ offers 3. Injuries to or abnormalities of blood vessels, ureters, or kidney 4. Kidney perfusion information, if performed 5. Kidney laterality 6. Biopsy results, if performed. The host OPO must make reasonable efforts to perform a biopsy on deceased donor kidneys from donors that meet at least one of the following criteria, excluding donors less than 18 years old: • Anuria, or a urine output of less than 100ml in 24 hours during current hospital admission or in the course of donor management • Donor has received hemodialysis or other renal replacement therapy during current hospital admission or in the course of donor management • History of diabetes, or HbA1C of 6.5 or greater during donor evaluation or management • KDPI greater than 85% at the time of original match run. • Donor age 60 years or older • Donor age 50-59 years, and meets at least two of the following criteria: o History of hypertension o Manner of death: Cerebrovascular Accident (CVA) o Terminal serum creatinine greater than or equal to 1.5mg/dl OPTN Policies Policy 2: Deceased Donor Organ Procurement Page 31 . If the biopsy is not performed, the host OPO must document the reason and make this documentation available to the OPTN on request.
+
+==============================
+
+SECTION: 3.9 | Removing Candidates from the Waiting List
+
+OPTN Policy 3: Candidate Registrations, Modifications, and
+Section 3.9: Removing Candidates from the Waiting List
+
+If a candidate receives a transplant or dies while awaiting a transplant then the registering transplant hospitals must remove the candidate from the hospital’s organ waiting lists and notify the OPTN within 24 hours of the event. If the candidate has multiple-registrations for the same organ, each transplant hospital where the candidate is registered must meet these requirements. The OPTN will notify other transplant hospitals when a multiple registered candidate receives a transplant or another transplant hospital reports the candidate as deceased. Upon notification, all other transplant hospitals involved can investigate and remove the candidate from the transplant hospital’s waiting list. If the transplant recipient re-registers for another organ to replace a transplanted organ, then waiting time will begin as of the date and time the candidate re-qualifies. The waiting time from the previous registration may be added to the new registration according to Policy 3.6.B: Waiting Time Reinstatement for Non-Function of Transplanted Organ.
+
+==============================
+
+SECTION: 4.7.A | Crossmatching for Kidney Transplants
+
+OPTN Policy 4: Histocompatibility
+Section 4.7.A: Crossmatching for Kidney Transplants
+
+Laboratories performing histocompatibility testing for kidney transplants or multi-organ transplants in which a kidney is to be transplanted must perform a final crossmatch and report the results to the Transplant Program before transplant.
+
+==============================
+
+SECTION: 5.3.C | Informed Consent for Kidneys Based on KDPI Greater than 85%
+
+OPTN Policy 5: Organ Offers, Acceptance, and Verification
+Section 5.3.C: Informed Consent for Kidneys Based on KDPI Greater than 85%
+
+Prior to receiving an offer for a kidney with a Kidney Donor Profile Index (KDPI) score greater than 85%, transplant programs must obtain written, informed consent from each kidney candidate willing to receive offers for kidneys in this category. This requirement also applies to multi-organ offers that include a kidney; however, this informed consent may be obtained any time prior to transplant.
+
+==============================
+
+SECTION: 5.8 | Pre-Transplant Verification
+
+OPTN Policy 5: Organ Offers, Acceptance, and Verification
+Section 5.8: Pre-Transplant Verification
+
+Transplant hospitals must develop and comply with a written protocol to perform pre-transplant verifications as required below.
+
+==============================
+
+SECTION: 8.5.A | Allocation of Dual Kidneys
+
+OPTN Policy 8: Allocation of Kidneys
+Section 8.5.A: Allocation of Dual Kidneys
+
+If a host OPO procures both kidneys with a KDPI score greater than or equal to 35% from a single deceased donor who weighs greater than or equal to 18 kg, those kidneys will be offered to candidates according to OPTN Policy 8.4.K: Allocation of Kidneys from Deceased Donors with KDPI Scores Greater than or Equal to 35% but Less than or Equal to 85% or OPTN Policy 8.4.L: Allocation of Kidneys from Deceased Donors with KDPI Scores Greater Than 85%.
+
+==============================
+
+SECTION: 9.5.I | Requirements for Hepatocellular Carcinoma (HCC) MELD or PELD Score
+
+OPTN Policy 9: Allocation of Livers and Liver-Intestines
+Section 9.5.I: Requirements for Hepatocellular Carcinoma (HCC) MELD or PELD Score
+
+Exceptions Upon submission of the first exception request, a candidate with hepatocellular carcinoma (HCC) will receive a score according to OPTN Policy 9.5.I.vii: Extensions of HCC Exceptions if the candidate meets the criteria according to OPTN Policies 9.5.I.i through 9.5.I.vi. 9.5.I.i Initial Assessment and Requirements for HCC Exception Requests Prior to applying for a standardized MELD or PELD exception, the candidate must undergo a thorough assessment that includes all of the following: 1. An evaluation of the number and size of lesions using multiphase contrast- enhanced computer tomography (CT) or magnetic resonance imaging (MRI) before locoregional therapy. 2. An evaluation that the lesions meet Class 5 criteria according to Table 9-9 using a multiphase contrast-enhanced (CT), (MRI), or ultrasound (CEUS). 3. A CT of the chest to rule out metastatic disease. This is only required prior to applying for an initial exception. A CT of the chest is not required for exception extensions. 4. A CT or MRI to rule out any other sites of extrahepatic spread or macrovascular involvement 5. An indication that the candidate is not eligible for resection 6. An indication whether the candidate has undergone locoregional therapy 7. The candidate’s alpha-fetoprotein (AFP) level The transplant hospital must maintain documentation of the radiologic images and assessments of all OPTN Class 5 lesions in the candidate’s medical record. If growth criteria are used to classify a lesion as HCC, the radiology report must contain the prior and current dates of imaging, type of imaging, and measurements of the lesion. For those candidates who receive a liver transplant while receiving additional priority under the HCC exception criteria, the transplant hospital must submit the Post-Transplant Explant Pathology Form to the OPTN within 60 days of transplant. If the Post-Transplant Explant Pathology Form does not show evidence of HCC or liver- directed therapy for HCC, the transplant program must also submit documentation or imaging studies confirming HCC at the time of assignment. The Liver and Intestinal Organ Transplantation Committee will review the submitted documentation or imaging studies when more than 10 percent of the Post- Transplant Explant Pathology Forms submitted by a transplant program in a one year period do not show evidence of HCC or liver-directed therapy for HCC. OPTN Policies Policy: 9 Allocation of Livers and Liver-Intestines Page 197 . 9.5.I.ii Eligible Candidates Definition of T2 Stage Candidates with hepatic lesions that meet T2 stage are eligible for a standardized MELD or PELD exception if they have an alpha-fetoprotein (AFP) level less than or equal to 1000 ng/mL. T2 stage is defined as candidates with either of the following: • One Class 5 lesion greater than or equal to 2 cm and less than or equal to 5 cm in size. • Two or three Class 5 lesions each greater than or equal to 1 cm and less than or equal to 3 cm in size.
+
+==============================
+
+SECTION: 9.5.I | Requirements for Hepatocellular Carcinoma (HCC) MELD or PELD Score
+
+OPTN Policy 9: Allocation of Livers and Liver-Intestines
+Section 9.5.I: Requirements for Hepatocellular Carcinoma (HCC) MELD or PELD Score
+
+of the following: • One Class 5 lesion greater than or equal to 2 cm and less than or equal to 5 cm in size. • Two or three Class 5 lesions each greater than or equal to 1 cm and less than or equal to 3 cm in size. A candidate who has previously had an AFP level greater than 1000 ng/mL at any time must qualify for a standardized MELD or PELD exception according to OPTN Policy 9.5.I.iv: Candidates with Alpha-fetoprotein (AFP) Levels Greater than 1000. 9.5.I.iii Lesions Eligible for Downstaging Protocols Candidates are eligible for a standardized MELD or PELD exception if, before completing locoregional therapy, they have lesions that meet one of the following criteria: • One Class 5 lesion greater than 5 cm and less than or equal to 8 cm • Two or three Class 5 lesions that meet all of the following: o at least one lesion greater than 3 cm o each lesion less than or equal to 5 cm, and o a total diameter of all lesions less than or equal to 8 cm • Four or five Class 5 lesions each less than 3 cm, and a total diameter of all lesions less than or equal to 8 cm For candidates who meet the downstaging criteria above and then complete locoregional therapy, the viable lesions must subsequently meet the size requirements for T2 stage according to OPTN Policy 9.5.I.ii: Eligible Candidates Definition of T2 Stage to be eligible for a standardized MELD or PELD exception. Downstaging to meet eligibility requirements for T2 stage must be demonstrated by multiphase contrast-enhanced CT or MRI performed after locoregional therapy. Candidates with lesions that do not initially meet the downstaging protocol inclusion criteria who are later downstaged and then meet eligibility for T2 stage are not automatically eligible for a standardized MELD or PELD exception and must be referred to the NLRB for consideration of a MELD or PELD exception. 9.5.I.iv Candidates with Alpha-fetoprotein (AFP) Levels Greater than 1000 Candidates with lesions meeting T2 stage according to OPTN Policy 9.5.I.ii Eligible Candidates Definition of T2 Stage but with an alpha-fetoprotein (AFP) level greater than 1000 ng/mL may be treated with locoregional therapy. If the candidate’s AFP level falls below 500 ng/mL after treatment, the candidate is eligible for a standardized MELD or PELD exception as long as the candidate’s AFP level remains OPTN Policies Policy: 9 Allocation of Livers and Liver-Intestines Page 198 . below 500 ng/mL. Candidates with an AFP level greater than or equal to 500 ng/mL following locoregional therapy at any time must be referred to the NLRB for consideration of a MELD or PELD exception. 9.5.I.v Requirements for Multiphase Contrast-enhanced CT or MRI of the Liver CT scans or MRIs performed for a HCC MELD or PELD score exception request must be interpreted by a radiologist at a transplant hospital.
+
+==============================
+
+SECTION: 9.5.I | Requirements for Hepatocellular Carcinoma (HCC) MELD or PELD Score
+
+OPTN Policy 9: Allocation of Livers and Liver-Intestines
+Section 9.5.I: Requirements for Hepatocellular Carcinoma (HCC) MELD or PELD Score
+
+time must be referred to the NLRB for consideration of a MELD or PELD exception. 9.5.I.v Requirements for Multiphase Contrast-enhanced CT or MRI of the Liver CT scans or MRIs performed for a HCC MELD or PELD score exception request must be interpreted by a radiologist at a transplant hospital. If the lesion cannot be categorized due to image degradation or omission, then the lesion will be classified as Not categorizable (NC) and imaging must be repeated or completed to receive an HCC MELD or PELD exception. If the lesion cannot be fully categorized due to image degradation or omission, then imaging must be repeated or completed. Contrast- enhanced ultrasound (CEUS) can be used to determine class 5 classification, in accordance with Table 9-9. 9.5.I.vi Imaging Requirements for Class 5 Lesions Lesions found on imaging in candidates at risk for HCC are classified according to Table 9-9. The imaging criteria within the table apply only to observations which do not represent benign lesions or non-HCC malignancy (i.e. targetoid or LR-M) by imaging. Table 9-9: Classification System for Lesions Seen on Imaging of Livers Class Description NC – Not Categorizable Incomplete or technically inadequate study due to image degradation or omission 5A Must meet all of the following: • Maximum diameter of at least 1 cm and less than 2 cm, as measured on late arterial or portal phase images • Either of the following: o LI-RADS 5 classification on CT, MRI, or CEUS o Biopsy 5B Must meet all of the following: • Maximum diameter of at least 2 cm and less than or equal to 5 cm, as measured on late arterial or portal phase images • Either of the following: o LI-RADS 5 classification on CT, MRI, or CEUS o Biopsy 5T a. Any Class 5A, 5B lesion that was automatically approved upon initial request or extension and has subsequently been treated by locoregional therapy OPTN Policies Policy: 9 Allocation of Livers and Liver-Intestines Page 199 . 9.5.I.vii Extensions of HCC Exceptions A candidate with an approved exception for HCC is eligible for automatic approval of an extension if the transplant program enters a MELD or PELD Exception Score Extension Request that contains the following: 1. Documentation of the tumor stage using multiphase contrast-enhanced CT or MRI 2. The type of treatment if the number of tumors decreased since the last request 3. The candidate’s alpha-fetoprotein (AFP) level A CT of the chest to rule out metastatic disease is not required after the initial exception request.
+
+==============================
+
+SECTION: 9.5.I | Requirements for Hepatocellular Carcinoma (HCC) MELD or PELD Score
+
+OPTN Policy 9: Allocation of Livers and Liver-Intestines
+Section 9.5.I: Requirements for Hepatocellular Carcinoma (HCC) MELD or PELD Score
+
+Documentation of the tumor stage using multiphase contrast-enhanced CT or MRI 2. The type of treatment if the number of tumors decreased since the last request 3. The candidate’s alpha-fetoprotein (AFP) level A CT of the chest to rule out metastatic disease is not required after the initial exception request. The candidate’s exception extension will then be automatically approved unless any of the following occurs: • The candidate’s lesions progress beyond T2 criteria, according to OPTN 9.5.I.ii: Eligible Candidates Definition of T2 Stage • The candidate’s alpha-fetoprotein (AFP) level was less than or equal to 1,000 ng/mL on the initial request but subsequently rises above 1,000 ng/mL • The candidate’s AFP level was greater than 1,000 ng/mL, the AFP level falls below 500 ng/mL after treatment but before the initial request, then the AFP level subsequently rises to greater than or equal to 500 ng/mL • The candidate’s tumors have been resected since the previous request • The program requests a score different from the scores assigned in Table 9-10. When a transplant program submits either an initial exception request or the first extension request for a liver candidate at least 18 years old at the time of registration that meets the requirements for a standardized MELD score exception, the candidate will appear on the match run according to the calculated MELD score. A candidate who meets these requirements for a MELD or PELD score exception for HCC will receive a score according to Table 9-10 below. Table 9-10: HCC Exception Scores Age Age at registration Exception Request Score At least 18 years old At least 18 years old Initial and first extension Calculated MELD At least 18 years old At least 18 years old Any extension after the first extension 3 points below MMaT At least 12 years old Less than 18 years old Any 40 Less than 12 years old Less than 12 years old Any 40 OPTN Policies Policy: 9 Allocation of Livers and Liver-Intestines Page 200 .
+
+==============================
+
+SECTION: 10.1 | Lung Composite Allocation Score
+
+OPTN Policy 10: Allocation of Lungs
+Section 10.1: Lung Composite Allocation Score
+
+The lung composite allocation score is the combined total of the candidate’s lung medical urgency score, lung post-transplant outcomes score, lung biological disadvantages score, lung patient access score and lung placement efficiency score. The lung composite allocation score is awarded on a scale from 0 to 100. Candidates will be rank-ordered by lung composite allocation score. If two or more candidates have the same lung composite allocation score, the tied candidates will be ranked by order of their registration date (oldest to newest).
+
+==============================
+
+SECTION: 11.3.B | Kidney-Pancreas Waiting Time Criteria for Candidates At Least 18 Years Old
+
+OPTN Policy 11: Allocation of Pancreas, Kidney-Pancreas, and Islets
+Section 11.3.B: Kidney-Pancreas Waiting Time Criteria for Candidates At Least 18 Years Old
+
+If a kidney-pancreas candidate is 18 years or older on the date the candidate is registered for a kidney-pancreas, then the candidate begins to accrue waiting time once the candidate has met all of the following conditions: 1. The candidate is registered for a kidney-pancreas. 2. The candidate qualifies for kidney waiting time according to OPTN Policy 8.: Waiting Time. 3. The candidate is on insulin. Once a kidney-pancreas candidate begins to accrue waiting time, the candidate will remain qualified for waiting time. OPTN Policies Policy 11: Allocation of Pancreas, Kidney-Pancreas, and Islets Page 254 .
+
+==============================
+
+SECTION: 15.3.C | Required Post-Transplant Infectious Disease Testing
+
+OPTN Policy 15: Identification of Transmissible Diseases
+Section 15.3.C: Required Post-Transplant Infectious Disease Testing
+
+1. Transplant programs must test all recipients post-transplant for: a. HIV ribonucleic acid (RNA) by nucleic acid test (NAT) b. HBV deoxyribonucleic acid (DNA) by nucleic acid test (NAT) c. HCV ribonucleic acid (RNA) by nucleic acid test (NAT) 2. Testing must be performed on the recipient at least 28 days but no later than 56 days post- transplant. 3. If the candidate is known to be infected with HIV, HBV, or HCV, then testing for the known viral infection or infections is not required, however the other tests required according to this policy must still be performed. 4. The transplant program must offer recipients treatment of or prophylaxis for HIV, HBV, or HCV, when medically appropriate. 5. Transplant programs must conduct HBV NAT testing on liver recipients at least 335 days but no later than 395 days post-transplant.
+
+==============================
+
+SECTION: 16.5 | Verification and Recording of Information before Shipping
+
+OPTN Policy 16: Organ and Extra Vessel Packaging, Labeling,
+Section 16.5: Verification and Recording of Information before Shipping
+
+Each OPO or recovery hospital must establish and then implement a protocol for verifying the accuracy of organ packaging labels by an individual other than the individual initially performing the labeling and documentation. This verification must occur after completing the required labels and documentation for organs and the host OPO or recovery hospital must document that verification. The host OPO must use the OPTN organ tracking system to: 1. Record each item placed into the external organ package 2. Report to the OPTN that the package is ready for tracking
+
+==============================
+
+SECTION: 18.4 | Living Donor Data Submission Requirements
+
+OPTN Policy 18: Data Submission Requirements
+Section 18.4: Living Donor Data Submission Requirements
+
+The follow up period for living donors will be a minimum of two years. The OPTN will calculate follow-up rates separately, and at least annually, for the submission of the six- month, one-year, and two-year LDF forms. OPTN Policies Policy 18: Data Submission Requirement Page 335 . Living donor follow-up reporting requirements do not apply to any transplant recipient whose replaced or explanted organ is donated to another candidate.

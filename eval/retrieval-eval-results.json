@@ -1,0 +1,1389 @@
+{
+  "summary": {
+    "totalCases": 50,
+    "successfulCases": 50,
+    "errors": 0,
+    "answerableCases": 43,
+    "unsupportedCases": 7,
+    "recallAt1": 0.6627906976744186,
+    "recallAt3": 0.8837209302325582,
+    "recallAt5": 0.9302325581395349,
+    "hitAt1": 0.6976744186046512,
+    "hitAt3": 0.9069767441860465,
+    "hitAt5": 0.9534883720930233,
+    "mrr": 0.8062015503875969,
+    "answerRate": 1,
+    "abstentionAccuracy": 1,
+    "retryRate": 0.2,
+    "answerableRetryRate": 0.06976744186046512,
+    "retryRecoveryProxy": 1
+  },
+  "results": [
+    {
+      "id": "kidney-kdpi-calculation",
+      "category": "direct-factual",
+      "difficulty": "easy",
+      "query": "How is the Kidney Donor Profile Index calculated?",
+      "relevantSections": [
+        "8.4.B"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.4.B",
+        "5.3.C",
+        "8.4.I",
+        "8.4.K",
+        "14.4.B"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "prior-living-donor-conversational",
+      "category": "paraphrased",
+      "difficulty": "hard",
+      "query": "If someone donated an organ before and later needs a kidney transplant, do they receive any priority?",
+      "relevantSections": [
+        "8.4.E"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": true,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.4.F",
+        "8.4.G",
+        "8.4.E",
+        "8.4.H",
+        "5.4.A"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 0,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 3,
+      "reciprocalRank": 0.3333333333333333,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "unsupported-record-retention",
+      "category": "unsupported",
+      "difficulty": "hard",
+      "query": "How long must a transplant program preserve living donor medical records?",
+      "relevantSections": [],
+      "shouldAnswer": false,
+      "abstained": true,
+      "retrievalRetried": true,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "18.4",
+        "18.2",
+        "18.1.B",
+        "14.8.B",
+        "14.3"
+      ],
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "deceased-donor-infectious-testing",
+      "category": "direct-factual",
+      "difficulty": "easy",
+      "query": "What infectious disease testing is required for potential deceased organ donors?",
+      "relevantSections": [
+        "2.9"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "2.9",
+        "2.7",
+        "14.4.D",
+        "2.10",
+        "14.4.A"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "inactive-candidate-waiting-time",
+      "category": "procedural",
+      "difficulty": "medium",
+      "query": "Do transplant candidates continue to accrue waiting time while they are inactive?",
+      "relevantSections": [
+        "3.6.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "3.6.A",
+        "6.5",
+        "11.3",
+        "3.9",
+        "7.2"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "cpra-calculation",
+      "category": "direct-factual",
+      "difficulty": "easy",
+      "query": "How is a transplant candidate's CPRA calculated?",
+      "relevantSections": [
+        "4.6"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "4.6",
+        "1.2",
+        "10.2.B",
+        "8.4.J"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "organ-offer-response-time",
+      "category": "procedural",
+      "difficulty": "medium",
+      "query": "How much time does a transplant hospital have to respond to an organ offer?",
+      "relevantSections": [
+        "5.6.B"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": null,
+      "rankedSections": [
+        "5.6.B",
+        "5.4.D",
+        "2.14.G",
+        "13.6.B",
+        "18.1.B"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "adult-heart-status-one",
+      "category": "eligibility",
+      "difficulty": "medium",
+      "query": "What conditions can qualify an adult heart transplant candidate for Status 1?",
+      "relevantSections": [
+        "6.1.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "6.1.D",
+        "6.1",
+        "6.1.C",
+        "6.4"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "hitAt1": 0,
+      "hitAt3": 0,
+      "hitAt5": 0,
+      "firstRelevantRank": null,
+      "reciprocalRank": 0,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "meld-score-calculation",
+      "category": "calculation",
+      "difficulty": "medium",
+      "query": "How is the MELD score calculated for an adult liver transplant candidate?",
+      "relevantSections": [
+        "9.1.D"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "9.1",
+        "9.5.D",
+        "9.6.A",
+        "9.1.D",
+        "9.4.A"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 1,
+      "hitAt1": 0,
+      "hitAt3": 0,
+      "hitAt5": 1,
+      "firstRelevantRank": 4,
+      "reciprocalRank": 0.25,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "lung-28-day-values",
+      "category": "procedural",
+      "difficulty": "medium",
+      "query": "What clinical values must be reassessed every 28 days for certain lung waiting-list candidates?",
+      "relevantSections": [
+        "10.3.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "10.3.B",
+        "10.3.A",
+        "10.3",
+        "10.3.C",
+        "5.10.D"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 0,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 2,
+      "reciprocalRank": 0.5,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "living-donor-exclusions",
+      "category": "eligibility",
+      "difficulty": "easy",
+      "query": "What conditions require a living donor to be excluded from organ donation?",
+      "relevantSections": [
+        "14.4.E"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "14.3",
+        "14.4.E",
+        "14.10",
+        "13.6.B"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 0,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 2,
+      "reciprocalRank": 0.5,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "living-kidney-donor-diabetes",
+      "category": "paraphrased",
+      "difficulty": "hard",
+      "query": "Can someone with diabetes be accepted as a living kidney donor?",
+      "relevantSections": [
+        "14.4.E"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": true,
+      "reflectionSupported": null,
+      "rankedSections": [
+        "14.4.B",
+        "14.3",
+        "1.2",
+        "14.4.E"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 1,
+      "hitAt1": 0,
+      "hitAt3": 0,
+      "hitAt5": 1,
+      "firstRelevantRank": 4,
+      "reciprocalRank": 0.25,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "deceased-kidney-offer-information",
+      "category": "direct-factual",
+      "difficulty": "easy",
+      "query": "What additional information must an OPO provide with a deceased donor kidney offer?",
+      "relevantSections": [
+        "2.11.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "2.11.A",
+        "2.13",
+        "2.11.B",
+        "2.10",
+        "2.3"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "waiting-list-removal-after-death",
+      "category": "paraphrased",
+      "difficulty": "medium",
+      "query": "What must a transplant hospital do if a patient dies while waiting for an organ?",
+      "relevantSections": [
+        "3.9"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "3.9",
+        "14.10",
+        "15.4.B",
+        "2.15.G",
+        "2.15.H"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "kidney-final-crossmatch",
+      "category": "procedural",
+      "difficulty": "easy",
+      "query": "Is a final crossmatch required before a kidney transplant?",
+      "relevantSections": [
+        "4.7.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "4.7.A",
+        "13.6.B",
+        "14.6.A",
+        "18.5.D",
+        "13.4.C"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "high-kdpi-consent",
+      "category": "procedural",
+      "difficulty": "medium",
+      "query": "When must informed consent be obtained from a candidate willing to accept a kidney with a KDPI above 85%?",
+      "relevantSections": [
+        "5.3.C"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "5.3.C",
+        "13.6.A",
+        "13.3",
+        "15.7.B",
+        "13.4"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "dual-kidney-allocation",
+      "category": "eligibility",
+      "difficulty": "medium",
+      "query": "Under what donor conditions can both kidneys be offered under the dual-kidney allocation policy?",
+      "relevantSections": [
+        "8.5.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": true,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.5",
+        "8.5.A",
+        "1.2",
+        "5.10.D",
+        "8.5.B"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 0,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 2,
+      "reciprocalRank": 0.5,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "hcc-t2-eligibility",
+      "category": "eligibility",
+      "difficulty": "hard",
+      "query": "What tumor criteria qualify an HCC candidate as T2 stage for a standardized MELD or PELD exception?",
+      "relevantSections": [
+        "9.5.I"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "9.5.I",
+        "9.5.A"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "hcc-afp-over-1000",
+      "category": "paraphrased",
+      "difficulty": "hard",
+      "query": "Can a liver candidate with an AFP above 1000 still become eligible for a standardized HCC exception after treatment?",
+      "relevantSections": [
+        "9.5.I"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "9.5.I",
+        "9.4.C"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "lung-composite-score-components",
+      "category": "direct-factual",
+      "difficulty": "easy",
+      "query": "What components make up the lung composite allocation score?",
+      "relevantSections": [
+        "10.1"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "10.1",
+        "10.2",
+        "21.1.A",
+        "21.1.B",
+        "21.2.A"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "adult-kidney-pancreas-wait-time",
+      "category": "eligibility",
+      "difficulty": "medium",
+      "query": "When does an adult kidney-pancreas candidate begin accruing waiting time?",
+      "relevantSections": [
+        "11.3.B"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "11.3.D",
+        "11.3.A",
+        "11.3.B",
+        "9.6.A",
+        "11.3"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 0,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 3,
+      "reciprocalRank": 0.3333333333333333,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "post-transplant-infection-testing",
+      "category": "procedural",
+      "difficulty": "medium",
+      "query": "What infectious disease testing is required after an organ transplant and when must it be performed?",
+      "relevantSections": [
+        "15.3.C"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "15.3.C",
+        "2.9",
+        "15.2",
+        "14.4.A",
+        "15.5.C"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "living-donor-follow-up-period",
+      "category": "paraphrased",
+      "difficulty": "medium",
+      "query": "For how long are living donors followed under OPTN data submission requirements?",
+      "relevantSections": [
+        "18.4"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "18.4",
+        "18.1.B",
+        "14.12",
+        "18.4.B",
+        "18.5.B"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "kidney-graft-early-failure-wait-time",
+      "category": "procedural",
+      "difficulty": "hard",
+      "query": "Can a kidney recipient get their previous waiting time back if the transplanted kidney fails shortly after transplant?",
+      "relevantSections": [
+        "3.6.B"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.3.D",
+        "3.6.B",
+        "13.6.B",
+        "5.4.D",
+        "8.4.G"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 0,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 2,
+      "reciprocalRank": 0.5,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "allocation-citizenship-discrimination",
+      "category": "paraphrased",
+      "difficulty": "medium",
+      "query": "Can a patient's citizenship, ability to pay, race, or religion affect whether they receive a deceased donor organ?",
+      "relevantSections": [
+        "5.4.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "5.4.A",
+        "2.4",
+        "14.1.A",
+        "2.11",
+        "3.7.D"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "liver-kidney-allocation-rules",
+      "category": "multi-section",
+      "difficulty": "hard",
+      "query": "How are combined liver-kidney offers allocated and what medical criteria must a candidate meet?",
+      "relevantSections": [
+        "5.10.B",
+        "9.9"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "9.9",
+        "5.10.B",
+        "5.10.D",
+        "10.2.B"
+      ],
+      "recallAt1": 0.5,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "prior-liver-recipient-kidney-priority",
+      "category": "eligibility",
+      "difficulty": "hard",
+      "query": "When can someone who previously received a liver transplant receive priority on the kidney waiting list?",
+      "relevantSections": [
+        "8.4.F"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.4.F",
+        "8.4.G",
+        "8.4.H",
+        "8.6.A",
+        "8.3.D"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "prior-heart-recipient-kidney-priority",
+      "category": "eligibility",
+      "difficulty": "hard",
+      "query": "When can a previous heart transplant recipient qualify for priority for a kidney?",
+      "relevantSections": [
+        "8.4.G"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.4.G",
+        "8.4.H",
+        "8.4.F",
+        "3.7.B",
+        "13.6.B"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "prior-lung-recipient-kidney-priority",
+      "category": "eligibility",
+      "difficulty": "hard",
+      "query": "If a lung transplant recipient later develops severe kidney failure, when can they receive kidney allocation priority?",
+      "relevantSections": [
+        "8.4.H"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.4.H",
+        "1.2",
+        "8.4.G",
+        "14.3",
+        "8.4.F"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "liver-recipient-kidney-graft-failure",
+      "category": "multi-section",
+      "difficulty": "hard",
+      "query": "If a prior liver recipient receives a priority kidney transplant and that kidney fails soon after transplant, how can kidney priority or waiting time be restored?",
+      "relevantSections": [
+        "8.4.F",
+        "3.6.B"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.4.F",
+        "8.4.H",
+        "8.4.G",
+        "13.6.B",
+        "8.3.D"
+      ],
+      "recallAt1": 0.5,
+      "recallAt3": 0.5,
+      "recallAt5": 0.5,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "kpd-phi-consent",
+      "category": "procedural",
+      "difficulty": "medium",
+      "query": "Does a kidney paired donation candidate have to consent before their health information can be shared with other hospitals in the exchange?",
+      "relevantSections": [
+        "13.3.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "13.3.A",
+        "13.4.A",
+        "13.4.B",
+        "13.6.B",
+        "13.4"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "living-donor-specimen-retention",
+      "category": "direct-factual",
+      "difficulty": "easy",
+      "query": "How long must a recovery hospital store a living donor's blood specimen?",
+      "relevantSections": [
+        "14.8.B"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "14.8.B",
+        "14.3",
+        "14.5.A",
+        "14.4.A"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "living-donor-followup-form-timing",
+      "category": "procedural",
+      "difficulty": "medium",
+      "query": "When are Living Donor Follow-up forms due after donation?",
+      "relevantSections": [
+        "18.1.B"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "18.4",
+        "18.4.A",
+        "18.1.C",
+        "18.4.B",
+        "15.6.B"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 0,
+      "recallAt5": 0,
+      "hitAt1": 0,
+      "hitAt3": 0,
+      "hitAt5": 0,
+      "firstRelevantRank": null,
+      "reciprocalRank": 0,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "living-kidney-donor-followup-data",
+      "category": "procedural",
+      "difficulty": "medium",
+      "query": "What clinical and laboratory information must be reported during follow-up of living kidney donors?",
+      "relevantSections": [
+        "18.4.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "18.4.A",
+        "14.3",
+        "15.6.B",
+        "18.4.B",
+        "14.4.B"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "kidney-vs-liver-donor-followup",
+      "category": "multi-section",
+      "difficulty": "hard",
+      "query": "How do the required follow-up data differ between living kidney donors and living liver donors?",
+      "relevantSections": [
+        "18.4.A",
+        "18.4.B"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "18.4.A",
+        "18.4.B",
+        "18.4",
+        "14.3"
+      ],
+      "recallAt1": 0.5,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "waiting-time-transfer-programs",
+      "category": "procedural",
+      "difficulty": "medium",
+      "query": "Can a transplant candidate move their accumulated waiting time from one transplant program to another?",
+      "relevantSections": [
+        "3.6.C"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "3.6.C",
+        "3.9",
+        "6.1.E",
+        "3.7.B",
+        "13.6.B"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "organ-offer-medical-suitability",
+      "category": "procedural",
+      "difficulty": "easy",
+      "query": "Who is responsible for determining whether an offered organ is medically suitable for a potential recipient?",
+      "relevantSections": [
+        "5.6.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "5.6.A",
+        "11.5",
+        "2.1",
+        "5.9",
+        "9.12.C"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "adult-heart-status-two-devices",
+      "category": "eligibility",
+      "difficulty": "hard",
+      "query": "What types of mechanical circulatory support can qualify an adult heart candidate for Status 2?",
+      "relevantSections": [
+        "6.1.B"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "6.1.B",
+        "6.1.A",
+        "6.1.C"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "heart-status-two-iabp",
+      "category": "conversational",
+      "difficulty": "hard",
+      "query": "Can a heart transplant candidate on an intra-aortic balloon pump qualify for Status 2?",
+      "relevantSections": [
+        "6.1.B"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "6.1.C",
+        "6.1.B",
+        "6.2.A"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 0,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 2,
+      "reciprocalRank": 0.5,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "kidney-epts-factors",
+      "category": "direct-factual",
+      "difficulty": "easy",
+      "query": "What factors are used to calculate a kidney candidate's EPTS score?",
+      "relevantSections": [
+        "8.4.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.4.A",
+        "8.3.A",
+        "8.4.B",
+        "8.4.I",
+        "21.1.B"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "kidney-medical-urgency",
+      "category": "eligibility",
+      "difficulty": "hard",
+      "query": "What must a kidney candidate demonstrate to qualify for medically urgent status?",
+      "relevantSections": [
+        "8.4.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.4.A",
+        "8.3.C",
+        "7.1.A",
+        "8.4.G"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "hilar-cca-exception",
+      "category": "eligibility",
+      "difficulty": "hard",
+      "query": "What requirements must be met for a candidate to receive a standardized MELD or PELD exception for hilar cholangiocarcinoma?",
+      "relevantSections": [
+        "9.5.A"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "9.5",
+        "9.5.A",
+        "9.5.E",
+        "9.5.F",
+        "9.5.I"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 0,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 2,
+      "reciprocalRank": 0.5,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "lung-six-minute-walk-oxygen",
+      "category": "procedural",
+      "difficulty": "medium",
+      "query": "What oxygen testing is required before a six-minute walk test for a lung transplant candidate?",
+      "relevantSections": [
+        "10.3"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "10.3",
+        "10.3.B",
+        "10.3.A",
+        "21.2.B",
+        "2.11.D"
+      ],
+      "recallAt1": 1,
+      "recallAt3": 1,
+      "recallAt5": 1,
+      "hitAt1": 1,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 1,
+      "reciprocalRank": 1,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "pre-vs-post-transplant-infectious-testing",
+      "category": "multi-section",
+      "difficulty": "hard",
+      "query": "How do infectious disease testing requirements differ before and after organ transplantation?",
+      "relevantSections": [
+        "15.2",
+        "15.3.C"
+      ],
+      "shouldAnswer": true,
+      "abstained": false,
+      "retrievalRetried": false,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "2.9",
+        "15.3.C",
+        "15.3.B",
+        "5.5.B",
+        "14.4.A"
+      ],
+      "recallAt1": 0,
+      "recallAt3": 0.5,
+      "recallAt5": 0.5,
+      "hitAt1": 0,
+      "hitAt3": 1,
+      "hitAt5": 1,
+      "firstRelevantRank": 2,
+      "reciprocalRank": 0.5,
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "unsupported-medical-record-years",
+      "category": "unsupported",
+      "difficulty": "hard",
+      "query": "Exactly how many years must the complete medical record of a living organ donor be retained?",
+      "relevantSections": [],
+      "shouldAnswer": false,
+      "abstained": true,
+      "retrievalRetried": true,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "14.8.B",
+        "18.5.B",
+        "18.1.B",
+        "18.4",
+        "18.4.A"
+      ],
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "unsupported-kidney-survival-prediction",
+      "category": "unsupported",
+      "difficulty": "medium",
+      "query": "What is this patient's predicted five-year kidney graft survival probability?",
+      "relevantSections": [],
+      "shouldAnswer": false,
+      "abstained": true,
+      "retrievalRetried": true,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "21.1.B",
+        "8.4.A",
+        "14.3",
+        "3.6.B",
+        "21.2.B"
+      ],
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "unsupported-immunosuppressant-dose",
+      "category": "unsupported",
+      "difficulty": "medium",
+      "query": "What tacrolimus dose should be prescribed to a kidney transplant patient with a high creatinine level?",
+      "relevantSections": [],
+      "shouldAnswer": false,
+      "abstained": true,
+      "retrievalRetried": true,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.4.G",
+        "5.10.D",
+        "6.1.B",
+        "8.4.H",
+        "9.9"
+      ],
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "unsupported-best-transplant-hospital",
+      "category": "unsupported",
+      "difficulty": "medium",
+      "query": "Which transplant hospital in the United States has the best kidney transplant outcomes?",
+      "relevantSections": [],
+      "shouldAnswer": false,
+      "abstained": true,
+      "retrievalRetried": true,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "14.3",
+        "18.4.A",
+        "15.7.D",
+        "3.7.D",
+        "3.6.B"
+      ],
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "unsupported-transplant-cost",
+      "category": "unsupported",
+      "difficulty": "easy",
+      "query": "How much will a kidney transplant cost a patient with private insurance?",
+      "relevantSections": [],
+      "shouldAnswer": false,
+      "abstained": true,
+      "retrievalRetried": true,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "3.4.A",
+        "14.3",
+        "8.4.G",
+        "3.6.B",
+        "13.6.B"
+      ],
+      "answerBehaviorMatch": true
+    },
+    {
+      "id": "unsupported-rejection-symptoms",
+      "category": "unsupported",
+      "difficulty": "medium",
+      "query": "What symptoms should a kidney transplant patient watch for to know whether their body is rejecting the organ?",
+      "relevantSections": [],
+      "shouldAnswer": false,
+      "abstained": true,
+      "retrievalRetried": true,
+      "reflectionSupported": true,
+      "rankedSections": [
+        "8.4.G",
+        "8.4.H",
+        "8.4.A",
+        "8.4.F",
+        "3.7.D"
+      ],
+      "answerBehaviorMatch": true
+    }
+  ]
+}

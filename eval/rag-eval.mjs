@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 
 const ENDPOINT =
-    "https://rag-reflection-system.gangulasravani1.workers.dev/search";
+    "http://localhost:8787/search";
 
 const cases = JSON.parse(
     await fs.readFile(
@@ -52,10 +52,18 @@ const abstained =
         answer,
     );
 
+const clarificationRequired =
+    response.clarificationRequired === true;
+
+const clarificationAllowed =
+    testCase.allowClarification === true;
+
 const answerBehaviorMatch =
-    testCase.shouldAnswer
-        ? !abstained
-        : abstained;
+    clarificationRequired && clarificationAllowed
+        ? true
+        : testCase.shouldAnswer
+          ? !abstained && !clarificationRequired
+          : abstained && !clarificationRequired;
 
     let retryMatch = null;
 
@@ -79,6 +87,7 @@ const answerBehaviorMatch =
         answer,
         abstained,
         answerBehaviorMatch,
+        clarificationRequired,
     };
 }
 
@@ -167,6 +176,7 @@ console.table(
             result.reflectionSupported ??
             "N/A",
         error: result.error ?? "",
+        clarification: result.clarificationRequired ?? false,
         answerBehavior:
             result.answerBehaviorMatch ?? "N/A",
     })),

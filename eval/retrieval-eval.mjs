@@ -226,7 +226,8 @@ for (const testCase of cases) {
 
         const abstained =
             isAbstention(response);
-
+        const clarificationRequired =
+        response.clarificationRequired === true;
         const baseResult = {
             id: testCase.id,
             category:
@@ -239,6 +240,7 @@ for (const testCase of cases) {
             shouldAnswer:
                 testCase.shouldAnswer,
             abstained,
+            clarificationRequired,
             retrievalRetried:
                 response.retrievalRetried ??
                 false,
@@ -258,7 +260,8 @@ for (const testCase of cases) {
                 ...baseResult,
                 ...metrics,
                 answerBehaviorMatch:
-                    !abstained,
+                    !abstained &&
+                    !clarificationRequired,
             });
 
             console.log(
@@ -362,7 +365,8 @@ const recoveredAnswerable =
     retriedAnswerable.filter(
         (result) =>
             result.hitAt5 === 1 &&
-            !result.abstained,
+            !result.abstained &&
+            !result.clarificationRequired,
     );
 
 const summary = {
@@ -431,16 +435,26 @@ const summary = {
     answerRate: average(
         answerable.map(
             (result) =>
-                result.abstained
-                    ? 0
-                    : 1,
+                !result.abstained &&
+                !result.clarificationRequired
+                    ? 1
+                    : 0,
+        ),
+    ),
+    clarificationRate: average(
+    successful.map(
+        (result) =>
+            result.clarificationRequired
+                ? 1
+                : 0,
         ),
     ),
 
     abstentionAccuracy: average(
         unsupported.map(
             (result) =>
-                result.abstained
+                result.abstained &&
+                !result.clarificationRequired
                     ? 1
                     : 0,
         ),
@@ -532,7 +546,9 @@ console.log(
 console.log(
     `Answer rate:          ${percentage(summary.answerRate)}`,
 );
-
+console.log(
+    `Clarification rate:    ${percentage(summary.clarificationRate)}`,
+);
 console.log(
     `Abstention accuracy:  ${percentage(summary.abstentionAccuracy)}`,
 );

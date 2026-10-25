@@ -37,8 +37,10 @@ type ReflectionResult = {
 
 type RetrievalAssessment = {
     sufficient: boolean;
+    ambiguous: boolean;
     reason: string;
     rewrittenQuery: string;
+    clarificationQuestion: string;
 };
 
 type HybridRetrievalResult = {
@@ -278,7 +280,7 @@ export function buildRetrievalAssessmentPrompt(
     context: string,
 ): string {
     return `
-You are evaluating whether retrieved evidence is sufficient to answer a user's question.
+You are evaluating whether retrieved OPTN policy evidence is sufficient to answer a user's question.
 
 User question:
 
@@ -288,26 +290,41 @@ Retrieved evidence:
 
 ${context}
 
-Determine whether the retrieved evidence directly addresses the user's question.
+Evaluate both the user's question and the retrieved evidence.
 
 Return valid JSON with exactly this structure:
 
 {
   "sufficient": true,
+  "ambiguous": false,
   "reason": "...",
-  "rewrittenQuery": ""
+  "rewrittenQuery": "",
+  "clarificationQuestion": ""
 }
 
 Rules:
-- Set "sufficient" to true only when the retrieved evidence contains enough information to answer the user's question.
+- Set "sufficient" to true only when the retrieved evidence directly contains enough information to answer the user's exact question.
+- Related information is not sufficient when it answers a different question.
+- Do not infer that a requirement for one item applies to a broader category. For example, a retention period for a specimen does not establish the retention period for an entire medical record.
+- If the evidence explicitly states requirements for related concepts but does not state the requirement asked about by the user, set "sufficient" to false.
+- Set "ambiguous" to true only when important information is genuinely missing from the user's question and that missing information prevents determining what the user is asking.
+- Ambiguity must come from the wording of the user's question, not from gaps or differences in the retrieved evidence.
+- Do not mark a question ambiguous merely because the retrieved evidence discusses related concepts or uses different terminology.
+- If the user's requested concept is clear but the retrieved evidence does not directly answer it, set "ambiguous" to false and "sufficient" to false.
+- Examples of genuine ambiguity include a question where organ type, donor versus candidate context, or another distinction is omitted and different choices would materially change the policy answer.
+- Do not mark a question ambiguous merely because it is broad if the retrieved evidence supports a clear, useful answer.
+- If "ambiguous" is true, set "sufficient" to false.
+- If "ambiguous" is true, provide one concise clarification question in "clarificationQuestion".
+- If "ambiguous" is true, set "rewrittenQuery" to an empty string.
+- If the question is not ambiguous but the evidence is insufficient, rewrite the user's question into a concise domain-specific retrieval query in "rewrittenQuery".
+- Prefer terminology likely to appear in formal OPTN policy documents when rewriting.
+- If the evidence is sufficient, set both "rewrittenQuery" and "clarificationQuestion" to empty strings.
+- Preserve the user's original meaning.
+- Preserve specific domain terminology already present in the user's question when rewriting.
+- When rewriting, preserve the user's underlying intent, not just the topic. If the user asks whether something is allowed, accepted, eligible, prohibited, required, or excluded, use terminology reflecting that decision or eligibility intent rather than rewriting it only as an evaluation, assessment, or documentation question.
+- Do not replace explicit user terminology with a different policy concept or policy number merely because the retrieved evidence references it.
 - Do not answer the user's question.
 - Do not use outside knowledge.
-- Evaluate the evidence based on meaning, not just keyword overlap.
-- If the evidence is sufficient, set "rewrittenQuery" to an empty string.
-- If the evidence is insufficient, rewrite the user's question into a concise domain-specific retrieval query.
-- Prefer terminology likely to appear in formal policy or regulatory documents rather than conversational wording.
-- Preserve the user's original meaning.
-- Preserve the user's original intent when rewriting.
 `.trim();
 }
 export function parseRetrievalAssessment(
@@ -323,16 +340,20 @@ export function parseRetrievalAssessment(
 
         if (
             typeof parsed.sufficient !== "boolean" ||
+            typeof parsed.ambiguous !== "boolean" ||
             typeof parsed.reason !== "string" ||
-            typeof parsed.rewrittenQuery !== "string"
+            typeof parsed.rewrittenQuery !== "string" ||
+            typeof parsed.clarificationQuestion !== "string"
         ) {
             return null;
         }
 
         return {
             sufficient: parsed.sufficient,
+            ambiguous: parsed.ambiguous,
             reason: parsed.reason,
             rewrittenQuery: parsed.rewrittenQuery,
+            clarificationQuestion: parsed.clarificationQuestion,
         };
     } catch {
         return null;
@@ -779,7 +800,36 @@ const retrievalAssessment =
             retrievalAssessmentContent,
         )
         : null;
-
+if (
+    retrievalAssessment &&
+    retrievalAssessment.ambiguous
+) {
+    return Response.json({
+        query,
+        answer:
+            retrievalAssessment.clarificationQuestion ||
+            "Could you provide a little more detail about your question?",
+        citations: [],
+        reflection: {
+            supported: true,
+            issues: [],
+            revisedAnswer: null,
+        },
+        retrievalAssessment,
+        retryAssessment: null,
+        retrievalRetried: false,
+        retrievalQuery: searchQuery,
+        clarificationRequired: true,
+        sources: activeMatches.map(
+            (match) => ({
+                id: match.id,
+                source: match.source,
+                score: match.score,
+                content: match.content,
+            }),
+        ),
+    });
+}
 if (
     retrievalAssessment &&
     !retrievalAssessment.sufficient &&
@@ -917,7 +967,36 @@ if (retryMatches.length > 0) {
             )
             : null;
 }
-
+if (
+    retryAssessment &&
+    retryAssessment.ambiguous
+) {
+    return Response.json({
+        query,
+        answer:
+            retryAssessment.clarificationQuestion ||
+            "Could you provide a little more detail about your question?",
+        citations: [],
+        reflection: {
+            supported: true,
+            issues: [],
+            revisedAnswer: null,
+        },
+        retrievalAssessment,
+        retryAssessment,
+        retrievalRetried: true,
+        retrievalQuery: searchQuery,
+        clarificationRequired: true,
+        sources: activeMatches.map(
+            (match) => ({
+                id: match.id,
+                source: match.source,
+                score: match.score,
+                content: match.content,
+            }),
+        ),
+    });
+}
 if (
     retryAssessment &&
     !retryAssessment.sufficient
@@ -932,6 +1011,7 @@ if (
             issues: [],
             revisedAnswer: null,
         },
+        clarificationRequired: false,
         retrievalAssessment,
         retryAssessment,
         retrievalRetried: true,
@@ -1063,6 +1143,7 @@ ${query}`,
                     retrievalAssessment,
                     retrievalRetried: retryMatches.length > 0,
                     retrievalQuery: searchQuery,
+                    clarificationRequired: false,
                     retryAssessment,
                     sources: activeMatches.map(
                         (match) => ({

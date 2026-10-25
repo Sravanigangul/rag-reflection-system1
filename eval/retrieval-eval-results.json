@@ -1,22 +1,23 @@
 {
   "summary": {
     "totalCases": 50,
-    "successfulCases": 50,
-    "errors": 0,
-    "answerableCases": 43,
+    "successfulCases": 49,
+    "errors": 1,
+    "answerableCases": 42,
     "unsupportedCases": 7,
-    "recallAt1": 0.6627906976744186,
-    "recallAt3": 0.8837209302325582,
-    "recallAt5": 0.9302325581395349,
-    "hitAt1": 0.6976744186046512,
-    "hitAt3": 0.9069767441860465,
-    "hitAt5": 0.9534883720930233,
-    "mrr": 0.8062015503875969,
-    "answerRate": 1,
+    "recallAt1": 0.6547619047619048,
+    "recallAt3": 0.8809523809523809,
+    "recallAt5": 0.9047619047619048,
+    "hitAt1": 0.6904761904761905,
+    "hitAt3": 0.9047619047619048,
+    "hitAt5": 0.9285714285714286,
+    "mrr": 0.7956349206349206,
+    "answerRate": 0.023809523809523808,
+    "clarificationRate": 0,
     "abstentionAccuracy": 1,
-    "retryRate": 0.2,
-    "answerableRetryRate": 0.06976744186046512,
-    "retryRecoveryProxy": 1
+    "retryRate": 0.20408163265306123,
+    "answerableRetryRate": 0.07142857142857142,
+    "retryRecoveryProxy": 0.6666666666666666
   },
   "results": [
     {
@@ -29,6 +30,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -58,6 +60,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": true,
       "reflectionSupported": true,
       "rankedSections": [
@@ -85,6 +88,7 @@
       "relevantSections": [],
       "shouldAnswer": false,
       "abstained": true,
+      "clarificationRequired": false,
       "retrievalRetried": true,
       "reflectionSupported": true,
       "rankedSections": [
@@ -106,6 +110,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -135,6 +140,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -164,6 +170,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -192,8 +199,9 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
-      "reflectionSupported": null,
+      "reflectionSupported": true,
       "rankedSections": [
         "5.6.B",
         "5.4.D",
@@ -221,6 +229,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -249,6 +258,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -278,6 +288,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -307,6 +318,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -334,24 +346,25 @@
         "14.4.E"
       ],
       "shouldAnswer": true,
-      "abstained": false,
+      "abstained": true,
+      "clarificationRequired": false,
       "retrievalRetried": true,
-      "reflectionSupported": null,
+      "reflectionSupported": true,
       "rankedSections": [
         "14.4.B",
         "14.3",
-        "1.2",
-        "14.4.E"
+        "13.6.B",
+        "14.4.A"
       ],
       "recallAt1": 0,
       "recallAt3": 0,
-      "recallAt5": 1,
+      "recallAt5": 0,
       "hitAt1": 0,
       "hitAt3": 0,
-      "hitAt5": 1,
-      "firstRelevantRank": 4,
-      "reciprocalRank": 0.25,
-      "answerBehaviorMatch": true
+      "hitAt5": 0,
+      "firstRelevantRank": null,
+      "reciprocalRank": 0,
+      "answerBehaviorMatch": false
     },
     {
       "id": "deceased-kidney-offer-information",
@@ -363,6 +376,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -392,6 +406,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -421,6 +436,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -450,6 +466,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -479,6 +496,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": true,
       "reflectionSupported": true,
       "rankedSections": [
@@ -508,6 +526,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -534,6 +553,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -560,6 +580,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -589,6 +610,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -618,6 +640,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -647,6 +670,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -676,6 +700,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -705,6 +730,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -735,6 +761,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -763,6 +790,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -792,6 +820,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -821,6 +850,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -851,6 +881,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -880,6 +911,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -909,6 +941,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -937,6 +970,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -966,6 +1000,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -996,6 +1031,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1024,6 +1060,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1053,6 +1090,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1082,6 +1120,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1109,6 +1148,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1136,6 +1176,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1165,6 +1206,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1193,6 +1235,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1216,30 +1259,8 @@
       "id": "lung-six-minute-walk-oxygen",
       "category": "procedural",
       "difficulty": "medium",
-      "query": "What oxygen testing is required before a six-minute walk test for a lung transplant candidate?",
-      "relevantSections": [
-        "10.3"
-      ],
       "shouldAnswer": true,
-      "abstained": false,
-      "retrievalRetried": false,
-      "reflectionSupported": true,
-      "rankedSections": [
-        "10.3",
-        "10.3.B",
-        "10.3.A",
-        "21.2.B",
-        "2.11.D"
-      ],
-      "recallAt1": 1,
-      "recallAt3": 1,
-      "recallAt5": 1,
-      "hitAt1": 1,
-      "hitAt3": 1,
-      "hitAt5": 1,
-      "firstRelevantRank": 1,
-      "reciprocalRank": 1,
-      "answerBehaviorMatch": true
+      "error": "fetch failed"
     },
     {
       "id": "pre-vs-post-transplant-infectious-testing",
@@ -1252,6 +1273,7 @@
       ],
       "shouldAnswer": true,
       "abstained": false,
+      "clarificationRequired": false,
       "retrievalRetried": false,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1279,14 +1301,14 @@
       "relevantSections": [],
       "shouldAnswer": false,
       "abstained": true,
+      "clarificationRequired": false,
       "retrievalRetried": true,
       "reflectionSupported": true,
       "rankedSections": [
-        "14.8.B",
-        "18.5.B",
-        "18.1.B",
         "18.4",
-        "18.4.A"
+        "18.1.B",
+        "18.5.B",
+        "18.1.C"
       ],
       "answerBehaviorMatch": true
     },
@@ -1298,14 +1320,14 @@
       "relevantSections": [],
       "shouldAnswer": false,
       "abstained": true,
+      "clarificationRequired": false,
       "retrievalRetried": true,
       "reflectionSupported": true,
       "rankedSections": [
-        "21.1.B",
         "8.4.A",
+        "8.4.G",
         "14.3",
-        "3.6.B",
-        "21.2.B"
+        "8.4.H"
       ],
       "answerBehaviorMatch": true
     },
@@ -1317,6 +1339,7 @@
       "relevantSections": [],
       "shouldAnswer": false,
       "abstained": true,
+      "clarificationRequired": false,
       "retrievalRetried": true,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1336,6 +1359,7 @@
       "relevantSections": [],
       "shouldAnswer": false,
       "abstained": true,
+      "clarificationRequired": false,
       "retrievalRetried": true,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1355,6 +1379,7 @@
       "relevantSections": [],
       "shouldAnswer": false,
       "abstained": true,
+      "clarificationRequired": false,
       "retrievalRetried": true,
       "reflectionSupported": true,
       "rankedSections": [
@@ -1374,6 +1399,7 @@
       "relevantSections": [],
       "shouldAnswer": false,
       "abstained": true,
+      "clarificationRequired": false,
       "retrievalRetried": true,
       "reflectionSupported": true,
       "rankedSections": [

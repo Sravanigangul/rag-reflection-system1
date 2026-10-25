@@ -30,8 +30,9 @@
     "expectedSections": ["8.4.E"],
     "shouldAnswer": true,
     "expectRetry": true,
-    "description": "Known V1 retrieval failure. V2 should detect insufficient evidence, rewrite the query, and recover the prior living donor policy."
-  },
+    "allowClarification": true,
+    "description": "Known V1 retrieval failure. V2 could recover the prior living donor policy through query rewrite; V3 may instead request clarification when the prior donation context is ambiguous."
+},
   {
     "id": "policy-terminology-prior-donor",
     "category": "domain_terminology",

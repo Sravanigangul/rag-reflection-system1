@@ -1015,3 +1015,110 @@ PolicyLens is a technical demonstration of evidence-grounded retrieval and gener
 It is not intended to provide medical advice, legal advice, transplant eligibility determinations, or clinical decision-making guidance.
 
 Users should consult the authoritative OPTN policy source and appropriate professionals for operational or clinical decisions.
+---
+
+# V3 – Multi-Document RAG and Completeness-Aware Reflection
+
+## Multi-Document Knowledge Base
+
+PolicyLens now supports three separate OPTN document collections.
+
+| Document collection | Chunks |
+|---|---:|
+| OPTN Policies | 530 |
+| OPTN Management and Membership Policies | 441 |
+| INVEST Bylaws | 45 |
+| **Total** | **1,016** |
+
+The five test chunks are excluded from this total.
+
+## Document Ingestion
+
+The ingestion pipeline supports:
+
+- PDF-based document processing.
+- Section-aware chunking.
+- Structured document metadata.
+- Batch insertion into Cloudflare D1.
+- Vector indexing through Cloudflare Vectorize.
+- Separate ingestion and indexing stages.
+- Batch-level response validation and error handling.
+
+Bulk ingestion scripts:
+
+- `bulk-ingest-management.ps1`
+- `bulk-ingest-bylaws.ps1`
+
+The scripts retrieve the administrator token from a local file rather than embedding credentials in source code.
+
+## Enhanced Answer Verification
+
+The reflection layer has been improved to evaluate both factual support and answer completeness.
+
+The reflection process now receives:
+
+1. Original user question.
+2. Retrieved policy evidence.
+3. Draft answer.
+
+It evaluates:
+
+- Factual consistency with retrieved evidence.
+- Citation support.
+- Missing procedural requirements.
+- Relevant conditions and exceptions.
+- Whether the answer addresses the original question.
+
+When an omission or unsupported claim is identified, the reflection layer can produce a revised answer using retrieved evidence.
+
+## Retrieval and Recovery
+
+The system includes:
+
+- Semantic retrieval.
+- D1 full-text search.
+- Reciprocal Rank Fusion.
+- Evidence-sufficiency assessment.
+- Query rewriting and retrieval retry.
+- Ambiguity detection and clarification.
+- Evidence-grounded answer generation.
+- Citation generation.
+- Reflection and safe abstention.
+
+## Manual Regression Testing
+
+The following behaviors have been exercised against the deployed Worker:
+
+| Evaluation | Observed result |
+|---|---|
+| OPTN Management Policy A.1 retrieval | Successful |
+| INVEST Bylaws retrieval | Successful |
+| Cross-document retrieval | Successful |
+| Unsupported salary question | Grounded refusal |
+| Retrieval retry | Triggered successfully |
+| Ambiguous blood-type question | Clarification generated |
+| ABO discrepancy question | Complete final answer generated |
+| ABO discrepancy repeat tests | 3/3 final answers included the conditional match-run requirement |
+
+### ABO Discrepancy Regression Test
+
+A test based on OPTN Policy 2.6.C identified an important answer-completeness issue.
+
+The initial answer mentioned the OPO's written protocol but omitted the conditional requirement to re-execute the match run when the final ABO result differs from the original match-run ABO.
+
+The updated reflection prompt identified the omission and produced a revised answer containing the missing procedural requirement.
+
+Three repeated tests produced final answers containing both requirements.
+
+These are preliminary manual regression results, not a formal clinical validation or comprehensive accuracy benchmark.
+
+## Current Limitations and Future Work
+
+- Expand the automated evaluation dataset.
+- Measure retrieval precision and recall.
+- Evaluate citation accuracy at the individual claim level.
+- Measure answer completeness across different policy topics.
+- Test retrieval consistency across repeated queries.
+- Improve reflection behavior for complex multi-document questions.
+- Establish broader regression testing before operational use.
+

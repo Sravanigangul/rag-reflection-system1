@@ -20,6 +20,22 @@ type OptnChunk = {
     text: string;
     metadata: OptnChunkMetadata;
 };
+type NewDocumentChunk = {
+    id: string;
+    content: string;
+    metadata: {
+        document_type: "management_policy" | "invest_bylaws";
+        document_title: string;
+        section_id: string;
+        section_title: string;
+        effective_date: number;
+        source_file: string;
+        parent?: string;
+        content_type?: string;
+        article_id?: string;
+        article_title?: string;
+    };
+};
 
 type IngestChunksBody = {
     chunks?: unknown;
@@ -360,21 +376,27 @@ export function parseRetrievalAssessment(
     }
 }
 export function buildReflectionPrompt(
+    query: string,
     answer: string,
     context: string,
 ): string {
     return `
-You are verifying whether an answer is supported by retrieved evidence.
+You are a healthcare policy answer reviewer.
 
-Retrieved evidence:
+Your task is to evaluate whether the draft answer is
+factually supported AND sufficiently complete.
+
+Original user question:
+
+${query}
+
+Retrieved policy evidence:
 
 ${context}
 
 Draft answer:
 
 ${answer}
-
-Evaluate the draft answer using only the retrieved evidence.
 
 Return valid JSON with exactly this structure:
 
@@ -385,17 +407,23 @@ Return valid JSON with exactly this structure:
 }
 
 Rules:
-- Set "supported" to true only when every factual claim in the draft answer is supported by the retrieved evidence.
-- Check that cited sources actually support the claims attached to them.
-- Do not use outside knowledge.
-- Do not invent facts.
-- If a claim is unsupported or contradicted, set "supported" to false.
-- Describe unsupported or contradicted claims in "issues".
-- If the answer is fully supported, preserve it in "revisedAnswer".
-- If it is not fully supported, rewrite "revisedAnswer" using only supported information.
+- Use only the retrieved evidence.
+- Verify that every factual claim is supported.
+- Verify that citations support their associated claims.
+- Check whether the answer addresses the original question.
+- Identify material procedural steps, conditions, exceptions,
+  and required actions relevant to the question.
+- Check whether the draft omits any of those requirements.
+- Do not add unrelated policy information.
+- Do not invent requirements or use outside knowledge.
+- If any claim is unsupported, contradicted, or a material
+  requirement is omitted, set "supported" to false.
+- Describe each problem in "issues".
+- If the answer is accurate and complete, preserve it.
+- Otherwise, revise the answer using only retrieved evidence.
+- Include citations for all material policy requirements.
 `.trim();
 }
-
 export function parseReflectionResult(
     text: string,
 ): ReflectionResult | null {
@@ -540,6 +568,30 @@ async function retrieveHybrid(
 export default {
     async fetch(request, env, ctx): Promise<Response> {
         const url = new URL(request.url);
+        const protectedPaths = new Set([
+    "/ingest",
+    "/ingest-chunks",
+    "/ingest-documents",
+    "/index-documents",
+]);
+
+if (
+    request.method === "POST" &&
+    protectedPaths.has(url.pathname)
+) {
+    const authorization = request.headers.get("Authorization");
+    const expectedAuthorization = `Bearer ${env.ADMIN_TOKEN}`;
+
+    if (
+        !env.ADMIN_TOKEN ||
+        authorization !== expectedAuthorization
+    ) {
+        return Response.json(
+            { error: "Unauthorized" },
+            { status: 401 }
+        );
+    }
+}
         if (
     request.method === "GET" &&
     url.pathname === "/"
@@ -1076,6 +1128,7 @@ ${query}`,
                 }
 
                 const reflectionPrompt = buildReflectionPrompt(
+                    query,
                     answer,
                     context,
                 );
@@ -1332,8 +1385,290 @@ ${query}`,
                     { status: 500 },
                 );
             }
-        }
+} // End of /ingest-documents endpoint
 
+if (
+    url.pathname === "/ingest-documents" &&
+    request.method === "POST"
+) {
+    let body: { chunks: NewDocumentChunk[] };
+
+try {
+    body = await request.json<{ chunks: NewDocumentChunk[] }>();
+} catch {
+    return Response.json(
+        { error: "The request body must be valid JSON." },
+        { status: 400 },
+    );
+}
+
+if (!body || !Array.isArray(body.chunks) || body.chunks.length === 0) {
+    return Response.json(
+        { error: "Please provide a non-empty chunks array." },
+        { status: 400 },
+    );
+}
+
+for (const chunk of body.chunks) {
+    if (
+        !chunk ||
+        typeof chunk.id !== "string" ||
+        !chunk.id.trim() ||
+        typeof chunk.content !== "string" ||
+        !chunk.content.trim() ||
+        !chunk.metadata ||
+        !["management_policy", "invest_bylaws"].includes(chunk.metadata.document_type) ||
+        typeof chunk.metadata.document_title !== "string" ||
+        !chunk.metadata.document_title.trim() ||
+        typeof chunk.metadata.effective_date !== "number" ||
+        !Number.isFinite(chunk.metadata.effective_date) ||
+        typeof chunk.metadata.source_file !== "string" ||
+        !chunk.metadata.source_file.trim()
+    ) {
+        return Response.json(
+            { error: "One or more document chunks are invalid." },
+            { status: 400 },
+        );
+    }
+}
+const chunkIds = body.chunks.map((chunk) => chunk.id);
+
+if (new Set(chunkIds).size !== chunkIds.length) {
+    return Response.json(
+        { error: "Duplicate chunk IDs found in the request." },
+        { status: 400 },
+    );
+}
+
+if (chunkIds.some((id) => id.startsWith("optn-policy-"))) {
+    return Response.json(
+        { error: "New document ingestion cannot use OPTN policy chunk IDs." },
+        { status: 400 },
+    );
+}
+// Prevent overwriting any existing D1 chunks.
+for (const chunk of body.chunks) {
+    const existing = await env.DB.prepare(
+        "SELECT id FROM document_chunks WHERE id = ?"
+    )
+        .bind(chunk.id)
+        .first<{ id: string }>();
+
+    if (existing) {
+        return Response.json(
+            {
+                error: "Chunk ID already exists in D1.",
+                chunk_id: chunk.id,
+            },
+            { status: 409 }
+        );
+    }
+}
+const documentIds = {
+    management_policy: "optn-management-policies",
+    invest_bylaws: "invest-bylaws",
+} as const;
+
+const documentTypes = [
+    ...new Set(body.chunks.map((chunk) => chunk.metadata.document_type)),
+];
+
+const documentsToIngest = documentTypes.map((type) => ({
+    document_type: type,
+    document_id: documentIds[type],
+    chunks: body.chunks.filter(
+        (chunk) => chunk.metadata.document_type === type,
+    ).length,
+}));
+// Prepare D1 statements for the new documents.
+// These statements are not executed yet.
+const d1Statements: D1PreparedStatement[] = [];
+
+for (const type of documentTypes) {
+    const documentChunks = body.chunks.filter(
+        (chunk) => chunk.metadata.document_type === type
+    );
+
+    const documentId = documentIds[type];
+    const firstChunk = documentChunks[0];
+
+
+    d1Statements.push(
+        env.DB.prepare(
+            `INSERT INTO documents (id, content, source)
+             VALUES (?, ?, ?)
+            ON CONFLICT(id) DO NOTHING`
+        ).bind(
+            documentId,
+            firstChunk.metadata.document_title,
+            firstChunk.metadata.source_file
+        )
+    );
+
+    for (let index = 0; index < documentChunks.length; index++) {
+        const chunk = documentChunks[index];
+
+        d1Statements.push(
+            env.DB.prepare(
+                `INSERT INTO document_chunks
+                 (id, document_id, chunk_index, content,
+                  start_char, end_char, metadata)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)`
+            ).bind(
+                chunk.id,
+                documentId,
+                index,
+                chunk.content,
+                0,
+                chunk.content.length,
+                JSON.stringify(chunk.metadata)
+            )
+        );
+    }
+}
+try {
+    await env.DB.batch(d1Statements);
+
+    return Response.json({
+        success: true,
+        stage: "d1_inserted",
+        chunks_received: body.chunks.length,
+        documents: documentsToIngest,
+    });
+} catch (error) {
+    console.error("D1 ingestion failed:", error);
+
+    return Response.json(
+        {
+            success: false,
+            error: "D1 ingestion failed.",
+        },
+        { status: 500 }
+    );
+} // End of catch block
+
+} // End of /ingest-documents
+if (
+    url.pathname === "/index-documents" &&
+    request.method === "POST"
+) {
+    let body: { chunk_ids?: string[] };
+
+    try {
+        body = await request.json<{ chunk_ids?: string[] }>();
+    } catch {
+        return Response.json(
+            { error: "Invalid JSON request body." },
+            { status: 400 }
+        );
+    }
+
+    const chunkIds = body.chunk_ids ?? [];
+
+            if (
+                !Array.isArray(chunkIds) ||
+                chunkIds.length < 1 ||
+                chunkIds.length > 10 ||
+                chunkIds.some(
+                    (id) => typeof id !== "string" || !id.trim()
+                ) ||
+                new Set(chunkIds).size !== chunkIds.length
+            ) {
+                return Response.json(
+                    { error: "Provide 1 to 10 unique chunk IDs." },
+                    { status: 400 }
+                );
+            }
+
+            try {
+                const placeholders = chunkIds.map(() => "?").join(",");
+
+                const result = await env.DB.prepare(
+                    `SELECT id, document_id, content, metadata
+                    FROM document_chunks
+                    WHERE id IN (${placeholders})
+                    AND document_id IN (
+                        'optn-management-policies',
+                        'invest-bylaws'
+                    )`
+                )
+                    .bind(...chunkIds)
+                    .all<{
+                        id: string;
+                        document_id: string;
+                        content: string;
+                        metadata: string | null;
+                    }>();
+
+                const chunks = result.results ?? [];
+
+                if (chunks.length !== chunkIds.length) {
+                    return Response.json(
+                        {
+                            error: "Some chunk IDs were not found in the new documents.",
+                        },
+                        { status: 404 }
+                    );
+                }
+
+                const embeddingResult = await env.AI.run(
+                    EMBEDDING_MODEL,
+                    {
+                        text: chunks.map((chunk) => chunk.content),
+                        pooling: "cls",
+                    }
+                );
+
+                const vectors = chunks.map((chunk, index) => {
+                    const values = getEmbeddingVector(
+                        embeddingResult,
+                        index
+                    );
+
+                    if (
+                        !values ||
+                        values.length !== EMBEDDING_DIMENSIONS
+                    ) {
+                        throw new Error(
+                            `Invalid embedding for ${chunk.id}`
+                        );
+                    }
+
+                    const metadata = JSON.parse(chunk.metadata ?? "{}");
+
+                    return {
+                        id: chunk.id,
+                        values,
+                        metadata: {
+                            document_id: chunk.document_id,
+                            document_type: metadata.document_type,
+                            section_id: metadata.section_id,
+                            source: metadata.source_file ?? metadata.source,
+                            doc_type: "policy_document_chunk",
+                        },
+                    };
+                });
+
+                await env.VECTORIZE.upsert(vectors);
+
+                return Response.json({
+                    success: true,
+                    stage: "vectorize_indexed",
+                    vectors_upserted: vectors.length,
+                    chunk_ids: chunks.map((chunk) => chunk.id),
+                });
+            } catch (error) {
+                console.error("Vector indexing failed:", error);
+
+                return Response.json(
+                    {
+                        success: false,
+                        error: "Vector indexing failed.",
+                    },
+                    { status: 500 }
+                );
+            }
+        }
         if (
             url.pathname === "/ingest" &&
             request.method === "POST"
@@ -1401,8 +1736,7 @@ ${query}`,
 
             try {
                 await env.DB.prepare(
-                    `INSERT INTO documents
-                        (id, content, source)
+                    `INSERT INTO documents (id, content, source)
                      VALUES (?, ?, ?)
                      ON CONFLICT(id) DO UPDATE SET
                         content = excluded.content,

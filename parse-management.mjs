@@ -670,11 +670,17 @@ for (const section of managementChunks) {
 
   ragChunks.push({
   id: `${section.id}-chunk-${part}`,
-  section_id: section.id,
-  document: section.document,
-  parent: section.parent,
-  title: section.title,
-  content: content.slice(start, end)
+  content: content.slice(start, end),
+  metadata: {
+    document_type: "management_policy",
+    document_title: section.document,
+    section_id: section.id.split("-")[1],
+    section_title: section.title,
+    parent: section.parent,
+    effective_date: 20260422,
+    source_file: "optn-management-and-membership-policies.pdf",
+    content_type: "policy_section"
+  }
 });
 
     if (end === content.length) break;

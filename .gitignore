@@ -170,3 +170,13 @@ optn_policies.pdf
 optn_chunks.json
 src/pdf-test.ts
 test-pdf.mjs
+
+policylens-admin-token.txt
+
+.dev.vars
+
+# Local source documents and recovery artifacts
+/data/
+/d1-recovery-bookmark.txt
+/src/index.backup.ts
+

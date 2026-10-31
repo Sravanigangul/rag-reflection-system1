@@ -1271,7 +1271,7 @@ ${query}`,
                             },
                         ],
                         temperature: 0,
-                        max_tokens: 1000,
+                        max_tokens: 2000,
                         chat_template_kwargs: {
                             enable_thinking: false,
                         },

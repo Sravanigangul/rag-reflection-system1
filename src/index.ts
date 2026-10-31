@@ -565,6 +565,65 @@ async function retrieveHybrid(
 
     return results;
 }
+type ExecutionTrace = {
+    traceId: string;
+    status: string;
+    latencyMs: number;
+    retrievalQueryChanged?: boolean;
+    retrievalRetried?: boolean;
+    retrievedChunkIds?: string[];
+    retrievalAssessment?: {
+        sufficient: boolean;
+        ambiguous: boolean;
+    } | null;
+    reflectionSupported?: boolean | null;
+    reflectionIssues?: string[];
+    citationCount?: number;
+    modelName?: string;
+    errorType?: string | null;
+};
+
+async function saveExecutionTrace(
+    db: Env["DB"],
+    trace: ExecutionTrace,
+): Promise<void> {
+    await db.prepare(`
+        INSERT INTO rag_execution_traces (
+            trace_id,
+            status,
+            latency_ms,
+            retrieval_query_changed,
+            retrieval_retried,
+            retrieved_chunk_ids,
+            retrieval_assessment,
+            reflection_supported,
+            reflection_issues,
+            citation_count,
+            model_name,
+            error_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `)
+    .bind(
+        trace.traceId,
+        trace.status,
+        trace.latencyMs,
+        Number(trace.retrievalQueryChanged ?? false),
+        Number(trace.retrievalRetried ?? false),
+        JSON.stringify(trace.retrievedChunkIds ?? []),
+        trace.retrievalAssessment
+            ? JSON.stringify(trace.retrievalAssessment)
+            : null,
+        trace.reflectionSupported == null
+            ? null
+            : Number(trace.reflectionSupported),
+        JSON.stringify(trace.reflectionIssues ?? []),
+        trace.citationCount ?? 0,
+        trace.modelName ?? null,
+        trace.errorType ?? null,
+    )
+    .run();
+}
 export default {
     async fetch(request, env, ctx): Promise<Response> {
         const url = new URL(request.url);
@@ -644,6 +703,11 @@ if (
 
             const query = body.query.trim();
             let searchQuery = query;
+
+            // Unique identifier and start time for this search request.
+            const traceId = crypto.randomUUID();
+            const traceStartedAt = Date.now();
+
 
             try {
                 const embeddingResult =
@@ -793,6 +857,8 @@ if (
                 if (fusedMatches.length === 0) {
                     return Response.json({
                         query,
+                        traceId,
+                        latencyMs: Date.now() - traceStartedAt,
                         answer:
                             "I do not have enough information in the supplied documents to answer this question.",
                         sources: [],
@@ -812,6 +878,8 @@ ${match.content}`,
                 if (!context) {
                     return Response.json({
                         query,
+                        traceId,
+                        latencyMs: Date.now() - traceStartedAt,
                         answer:
                             "I do not have enough readable context to answer this question.",
                         sources: [],
@@ -856,8 +924,11 @@ if (
     retrievalAssessment &&
     retrievalAssessment.ambiguous
 ) {
+    ctx.waitUntil(saveExecutionTrace(env.DB, { traceId, status: "clarification_required", latencyMs: Date.now() - traceStartedAt, retrievalQueryChanged: searchQuery !== query, retrievalRetried: false, retrievedChunkIds: activeMatches.map((match) => match.id), retrievalAssessment: { sufficient: retrievalAssessment.sufficient, ambiguous: retrievalAssessment.ambiguous }, reflectionSupported: null, reflectionIssues: [], citationCount: 0, modelName: GENERATION_MODEL }).catch((error) => console.error("Trace persistence failed:", error)));
     return Response.json({
         query,
+        traceId,
+        latencyMs: Date.now() - traceStartedAt,
         answer:
             retrievalAssessment.clarificationQuestion ||
             "Could you provide a little more detail about your question?",
@@ -1023,8 +1094,33 @@ if (
     retryAssessment &&
     retryAssessment.ambiguous
 ) {
+    ctx.waitUntil(
+        saveExecutionTrace(env.DB, {
+            traceId,
+            status: "clarification_required",
+            latencyMs: Date.now() - traceStartedAt,
+            retrievalQueryChanged: searchQuery !== query,
+            retrievalRetried: true,
+            retrievedChunkIds: activeMatches.map(
+                (match) => match.id,
+            ),
+            retrievalAssessment: {
+                sufficient: retryAssessment.sufficient,
+                ambiguous: retryAssessment.ambiguous,
+            },
+            reflectionSupported: null,
+            reflectionIssues: [],
+            citationCount: 0,
+            modelName: GENERATION_MODEL,
+        }).catch((error) =>
+            console.error("Trace persistence failed:", error),
+        ),
+    );
+
     return Response.json({
         query,
+        traceId,
+        latencyMs: Date.now() - traceStartedAt,
         answer:
             retryAssessment.clarificationQuestion ||
             "Could you provide a little more detail about your question?",
@@ -1053,8 +1149,33 @@ if (
     retryAssessment &&
     !retryAssessment.sufficient
 ) {
+    ctx.waitUntil(
+        saveExecutionTrace(env.DB, {
+            traceId,
+            status: "insufficient_evidence",
+            latencyMs: Date.now() - traceStartedAt,
+            retrievalQueryChanged: searchQuery !== query,
+            retrievalRetried: true,
+            retrievedChunkIds: activeMatches.map(
+                (match) => match.id,
+            ),
+            retrievalAssessment: {
+                sufficient: retryAssessment.sufficient,
+                ambiguous: retryAssessment.ambiguous,
+            },
+            reflectionSupported: null,
+            reflectionIssues: [],
+            citationCount: 0,
+            modelName: GENERATION_MODEL,
+        }).catch((error) =>
+            console.error("Trace persistence failed:", error),
+        ),
+    );
+
     return Response.json({
         query,
+        traceId,
+        latencyMs: Date.now() - traceStartedAt,
         answer:
             "I do not have enough information in the retrieved OPTN policy evidence to answer this question.",
         citations: [],
@@ -1187,9 +1308,38 @@ ${query}`,
                         };
                     },
                 );
+                const traceLatencyMs = Date.now() - traceStartedAt;
 
+                ctx.waitUntil(
+                    saveExecutionTrace(env.DB, {
+                        traceId,
+                        status: retrievalAssessment?.sufficient === false
+    ? "insufficient_evidence"
+    : "success",
+                        latencyMs: traceLatencyMs,
+                        retrievalQueryChanged: searchQuery !== query,
+                        retrievalRetried: retryMatches.length > 0,
+                        retrievedChunkIds: activeMatches.map(
+                            (match) => match.id,
+                        ),
+                        retrievalAssessment: retrievalAssessment
+                            ? {
+                                sufficient: retrievalAssessment.sufficient,
+                                ambiguous: retrievalAssessment.ambiguous,
+                            }
+                            : null,
+                        reflectionSupported: reflection?.supported ?? null,
+                        reflectionIssues: reflection?.issues ?? [],
+                        citationCount: citations.length,
+                        modelName: GENERATION_MODEL,
+                    }).catch((error) => {
+                        console.error("Trace persistence failed:", error);
+                    }),
+                );
                 return Response.json({
                     query,
+                    traceId,
+                    latencyMs: Date.now() - traceStartedAt,
                     answer: finalAnswer,
                     citations,
                     reflection,
@@ -1210,6 +1360,24 @@ ${query}`,
                     usage: generationResult.usage,
                 });
             } catch (error) {
+                ctx.waitUntil(
+        saveExecutionTrace(env.DB, {
+            traceId,
+            status: "error",
+            latencyMs: Date.now() - traceStartedAt,
+            retrievalQueryChanged: searchQuery !== query,
+            retrievalRetried: false,
+            retrievedChunkIds: [],
+            retrievalAssessment: null,
+            reflectionSupported: null,
+            reflectionIssues: [],
+            citationCount: 0,
+            modelName: GENERATION_MODEL,
+            errorType: "search_pipeline_error",
+        }).catch((traceError) =>
+            console.error("Trace persistence failed:", traceError),
+        ),
+    );
                 return Response.json(
                     {
                         error:

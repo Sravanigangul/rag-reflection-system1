@@ -27,10 +27,8 @@ describe("RAG worker", () => {
 
 		expect(response.status).toBe(200);
 
-		expect(await response.json()).toEqual({
-			message: "My RAG application is running",
-			status: "ready",
-		});
+		expect(response.headers.get("content-type")).toContain("text/html");
+                expect(await response.text()).toContain("PolicyLens | OPTN Policy Intelligence");
 	});
 
 	it("returns ready status from the home route (integration style)", async () => {
@@ -38,10 +36,8 @@ describe("RAG worker", () => {
 
 		expect(response.status).toBe(200);
 
-		expect(await response.json()).toEqual({
-			message: "My RAG application is running",
-			status: "ready",
-		});
+		expect(response.headers.get("content-type")).toContain("text/html");
+                expect(await response.text()).toContain("PolicyLens | OPTN Policy Intelligence");
 	});
 
 	it("returns 404 for an unknown route", async () => {
@@ -212,3 +208,14 @@ it("returns null for malformed reflection output", () => {
 
     expect(result).toBeNull();
 });
+describe("Reflection schema validation", () => {
+    it("rejects a response missing the revisedAnswer field", () => {
+        const response = JSON.stringify({
+            supported: true,
+            issues: [],
+        });
+
+        expect(parseReflectionResult(response)).toBeNull();
+    });
+});
+

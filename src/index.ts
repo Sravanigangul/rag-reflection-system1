@@ -1329,7 +1329,7 @@ ${query}`,
                             }
                             : null,
                         reflectionSupported: reflection?.supported ?? null,
-                        reflectionIssues: reflection?.issues ?? [],
+                        reflectionIssues: reflection?.issues ?? ["reflection_parse_failed"],
                         citationCount: citations.length,
                         modelName: GENERATION_MODEL,
                     }).catch((error) => {

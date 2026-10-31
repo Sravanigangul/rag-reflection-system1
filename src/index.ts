@@ -1200,6 +1200,7 @@ if (
     });
 }
 
+                const generationStartedAt = Date.now();
                 const generationResult =
                     await env.AI.run(
                         GENERATION_MODEL,
@@ -1229,6 +1230,7 @@ ${query}`,
                         },
                     );
 
+                const generationLatencyMs = Date.now() - generationStartedAt;
                 const generatedContent =
                     generationResult.choices?.[0]
                         ?.message?.content;
@@ -1254,6 +1256,7 @@ ${query}`,
                     context,
                 );
 
+                const reflectionStartedAt = Date.now();
                 const reflectionResponse = await env.AI.run(
                     GENERATION_MODEL,
                     {
@@ -1271,6 +1274,7 @@ ${query}`,
                     },
                 );
 
+                const reflectionLatencyMs = Date.now() - reflectionStartedAt;
                 const reflectionContent =
                     reflectionResponse.choices?.[0]
                         ?.message?.content;
@@ -1282,6 +1286,7 @@ ${query}`,
                         )
                         : null;
 
+                console.log("RAG stage latency:", JSON.stringify({ generationLatencyMs, reflectionLatencyMs }));
                 const finalAnswer =
                     reflection?.revisedAnswer.trim()
                         ? reflection.revisedAnswer.trim()

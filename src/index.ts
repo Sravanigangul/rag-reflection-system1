@@ -710,6 +710,7 @@ if (
 
 
             try {
+                const retrievalStartedAt = Date.now();
                 const embeddingResult =
                     await env.AI.run(
                         EMBEDDING_MODEL,
@@ -864,6 +865,7 @@ if (
                         sources: [],
                     });
                 }
+                const retrievalLatencyMs = Date.now() - retrievalStartedAt;
                 let activeMatches = fusedMatches;
                 let context = activeMatches
                     .filter((match) => match.content !== null)
@@ -892,6 +894,7 @@ ${match.content}`,
         context,
     );
 
+const assessmentStartedAt = Date.now();
 const retrievalAssessmentResponse =
     await env.AI.run(
         GENERATION_MODEL,
@@ -910,6 +913,7 @@ const retrievalAssessmentResponse =
         },
     );
 
+const assessmentLatencyMs = Date.now() - assessmentStartedAt;
 const retrievalAssessmentContent =
     retrievalAssessmentResponse.choices?.[0]
         ?.message?.content;
@@ -1286,7 +1290,7 @@ ${query}`,
                         )
                         : null;
 
-                console.log("RAG stage latency:", JSON.stringify({ generationLatencyMs, reflectionLatencyMs }));
+                console.log("RAG stage latency:", JSON.stringify({ retrievalLatencyMs, assessmentLatencyMs, generationLatencyMs, reflectionLatencyMs }));
                 const finalAnswer =
                     reflection?.revisedAnswer.trim()
                         ? reflection.revisedAnswer.trim()

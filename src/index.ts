@@ -1290,6 +1290,7 @@ ${query}`,
                         )
                         : null;
 
+                console.log("RAG reflection diagnostics:", JSON.stringify({ contentType: typeof reflectionContent, contentLength: typeof reflectionContent === "string" ? reflectionContent.length : null, finishReason: reflectionResponse.choices?.[0]?.finish_reason ?? null, parseSucceeded: reflection !== null }));
                 console.log("RAG stage latency:", JSON.stringify({ retrievalLatencyMs, assessmentLatencyMs, generationLatencyMs, reflectionLatencyMs }));
                 const finalAnswer =
                     reflection?.revisedAnswer.trim()
